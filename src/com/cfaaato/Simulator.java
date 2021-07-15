@@ -14,6 +14,6 @@ public class Simulator extends AbstractComponent {
     }
 
     protected void registerInternal(DeviceInformations deviceInf){
-
+        return;
     }
 }
