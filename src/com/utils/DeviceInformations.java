@@ -2,16 +2,18 @@ package com.utils;
 
 import com.data.P2PAddress;
 import com.data.Position;
+import com.services.P2PAddressI;
+import com.services.PositionI;
 
 public class DeviceInformations {
 
-    private P2PAddress address;
+    private P2PAddressI address;
     private String communicationUnboudPortUri;
-    private Position initialPosition;
+    private PositionI initialPosition;
     private double initialRange;
     private String routingInboundPortUri;
 
-    public DeviceInformations(P2PAddress address, String communicationUnboudPortUri, Position initialPosition, double initialRange, String routingInboundPortUri) {
+    public DeviceInformations(P2PAddressI address, String communicationUnboudPortUri, PositionI initialPosition, double initialRange, String routingInboundPortUri) {
         this.address = address;
         this.communicationUnboudPortUri = communicationUnboudPortUri;
         this.initialPosition = initialPosition;
@@ -19,7 +21,7 @@ public class DeviceInformations {
         this.routingInboundPortUri = routingInboundPortUri;
     }
 
-    public P2PAddress getAddress() {
+    public P2PAddressI getAddress() {
         return address;
     }
 
@@ -35,7 +37,7 @@ public class DeviceInformations {
         this.communicationUnboudPortUri = communicationUnboudPortUri;
     }
 
-    public Position getInitialPosition() {
+    public PositionI getInitialPosition() {
         return initialPosition;
     }
 
