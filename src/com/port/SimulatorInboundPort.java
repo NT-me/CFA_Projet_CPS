@@ -2,11 +2,9 @@ package com.port;
 
 import com.cfaaato.Simulator;
 import com.data.ConnectionInfo;
-import com.data.P2PAddress;
 import com.services.P2PAddressI;
 import com.services.PositionI;
 import com.services.RegistrationCI;
-import com.utils.DeviceInformations;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
@@ -28,6 +26,14 @@ public class SimulatorInboundPort extends AbstractInboundPort implements Registr
 
     public SimulatorInboundPort(Class<? extends OfferedCI> implementedInterface, ComponentI owner) throws Exception {
         super(implementedInterface, owner);
+    }
+
+    public SimulatorInboundPort(ComponentI owner) throws Exception {
+        super(OfferedCI.class,owner);
+    }
+
+    public SimulatorInboundPort(String uri, Simulator owner) throws Exception {
+        super(uri,RegistrationCI.class,owner);
     }
 
     @Override
