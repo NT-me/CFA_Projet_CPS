@@ -1,17 +1,20 @@
 package com.cfaaato;
 
+import com.connectors.CommunicationConnector;
 import com.connectors.RegistrationConnector;
 import com.data.ConnectionInfo;
 import com.data.P2PAddress;
 import com.data.Position;
+import com.port.ParticipantInboundPort;
 import com.port.ParticipantOutboundPort;
+import com.services.P2PAddressI;
 import com.services.PositionI;
 import com.services.RegistrationCI;
 import com.utils.ConstantsValues;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +22,7 @@ import java.util.Set;
 public class Participant extends AbstractComponent {
 
     protected ParticipantOutboundPort pop;
+    protected ParticipantInboundPort pip;
     private ConnectionInfo myInformations;
     private Set<ConnectionInfo> neighbors;
     private Position pos;
@@ -32,6 +36,24 @@ public class Participant extends AbstractComponent {
     protected Participant(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, Position pos) throws Exception {
         super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
         this.pos = pos;
+    }
+
+    public void newOnNetwork() throws Exception {
+        //TODO se connecte aux anciens voisins -- seems ok
+        for (ConnectionInfo coi : this.neighbors){
+            this.doPortConnection(
+                    this.pop.getPortURI(),
+                    coi.getCommunicationInboundPortURI(),
+                    CommunicationConnector.class.getCanonicalName());
+            this.pop.connect(this.myInformations.getAddress(),
+                    this.pip.getPortURI(),
+                    "");
+        }
+    }
+
+    public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI){
+        //TODO ajouter les nouveaux voisins + se connecter à eux et préparer les ports
+
     }
 
     @Override
@@ -63,7 +85,8 @@ public class Participant extends AbstractComponent {
                     this.myInformations.getInitialRange(),
                     this.myInformations.getRoutingInboundPortURI()
             );
-        System.out.println(this.neighbors);
+            System.out.println(this.neighbors);
+           this.newOnNetwork();
         } catch (Exception e) {
             e.printStackTrace();
         }
