@@ -2,7 +2,6 @@ package com.port;
 
 import com.data.ConnectionInfo;
 import com.services.P2PAddressI;
-import com.services.ParticipantCI;
 import com.services.PositionI;
 import com.services.RegistrationCI;
 import fr.sorbonne_u.components.ComponentI;

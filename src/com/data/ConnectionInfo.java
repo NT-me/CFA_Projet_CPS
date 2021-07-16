@@ -46,4 +46,6 @@ public class ConnectionInfo {
     public String getRoutingInboundPortURI(){
         return this.routingInboundPortUri;
     }
+
+
 }

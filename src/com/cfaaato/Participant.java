@@ -7,6 +7,7 @@ import com.data.Position;
 import com.port.ParticipantOutboundPort;
 import com.services.PositionI;
 import com.services.RegistrationCI;
+import com.utils.ConstantsValues;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
@@ -20,14 +21,17 @@ public class Participant extends AbstractComponent {
     protected ParticipantOutboundPort pop;
     private ConnectionInfo myInformations;
     private Set<ConnectionInfo> neighbors;
+    private Position pos;
 
-    protected Participant(int nbThreads, int nbSchedulableThreads) throws Exception {
+    protected Participant(int nbThreads, int nbSchedulableThreads, Position pos) throws Exception {
         super(nbThreads, nbSchedulableThreads);
         this.neighbors = new HashSet<ConnectionInfo>();
+        this.pos = pos;
     }
 
-    protected Participant(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads) throws Exception {
+    protected Participant(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, Position pos) throws Exception {
         super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
+        this.pos = pos;
     }
 
     @Override
@@ -41,14 +45,14 @@ public class Participant extends AbstractComponent {
         try {
             this.pop = new ParticipantOutboundPort(this);   //creation du port
             this.pop.publishPort();     //publication du port
-            this.doPortConnection(this.pop.getPortURI(), CVM.URI_REGISTRATION_SIMULATOR_PORT, RegistrationConnector.class.getCanonicalName());
+            this.doPortConnection(this.pop.getPortURI(), ConstantsValues.URI_REGISTRATION_SIMULATOR_PORT, RegistrationConnector.class.getCanonicalName());
 
             P2PAddress P2PAdress_init = new P2PAddress();
-            Position pos = new Position(3, 4);
+            //Position pos = new Position(3, 4);
             ConnectionInfo myInfo_init = new ConnectionInfo(P2PAdress_init,
                     this.pop.getPortURI(),
-                    pos,
-                    0,
+                    this.pos,
+                    ConstantsValues.RANGE_MAX_A,
                     "0");
             this.myInformations = myInfo_init;
 
@@ -59,7 +63,7 @@ public class Participant extends AbstractComponent {
                     this.myInformations.getInitialRange(),
                     this.myInformations.getRoutingInboundPortURI()
             );
-
+        System.out.println(this.neighbors);
         } catch (Exception e) {
             e.printStackTrace();
         }

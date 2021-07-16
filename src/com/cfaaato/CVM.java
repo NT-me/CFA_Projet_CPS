@@ -1,11 +1,11 @@
 package com.cfaaato;
 
+import com.data.Position;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import java.util.Random;
 
 public class CVM extends AbstractCVM {
-
-    public static final String URI_REGISTRATION_SIMULATOR_PORT = "Porc Originel";
 
     public CVM() throws Exception {
         super();
@@ -13,12 +13,22 @@ public class CVM extends AbstractCVM {
 
     @Override
     public void deploy() throws Exception{
+        Random rd = new Random(); // creating Random object
+        rd.nextInt();
         AbstractComponent.createComponent(
                 Simulator.class.getCanonicalName(), new Object[]{1,0}
         );
 
         AbstractComponent.createComponent(
-                Participant.class.getCanonicalName(), new Object[]{1,0}
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
         );
         super.deploy();
     }

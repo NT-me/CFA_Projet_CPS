@@ -26,7 +26,7 @@ public class SimulatorInboundPort extends AbstractInboundPort implements Registr
 
     public SimulatorInboundPort(Class<? extends OfferedCI> implementedInterface, ComponentI owner) throws Exception {
         super(implementedInterface, owner);
-    }
+    }public static final String URI_REGISTRATION_SIMULATOR_PORT = "Porc Originel";
 
     public SimulatorInboundPort(ComponentI owner) throws Exception {
         super(OfferedCI.class,owner);
