@@ -12,5 +12,5 @@ public interface RegistrationCI extends OfferedCI, RequiredCI {
 
     public Set<ConnectionInfo> registerAccessPoint(P2PAddressI address, String communicationInboundPortURI, PositionI initialPositionI, double initialRange,String routingInboudPortURI ) throws Exception;
 
-    public void unregister(P2PAddressI address);
+    //public void unregister(P2PAddressI address);
 }

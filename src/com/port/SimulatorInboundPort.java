@@ -47,8 +47,10 @@ public class SimulatorInboundPort extends AbstractInboundPort implements Registr
         return null;
     }
 
+    /*
     @Override
     public void unregister(P2PAddressI address) {
 
     }
+    */
 }

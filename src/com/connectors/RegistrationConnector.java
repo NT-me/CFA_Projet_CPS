@@ -18,9 +18,11 @@ public class RegistrationConnector extends AbstractConnector implements Registra
     public Set<ConnectionInfo> registerAccessPoint(P2PAddressI address, String communicationInboundPortURI, PositionI initialPositionI, double initialRange, String routingInboudPortURI) throws Exception{
         return ((RegistrationCI)this.offering).registerAccessPoint(address,communicationInboundPortURI,initialPositionI,initialRange,routingInboudPortURI);
     }
-
+/*
     @Override
     public void unregister(P2PAddressI address) {
 
     }
+
+ */
 }

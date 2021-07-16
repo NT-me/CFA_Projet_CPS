@@ -25,9 +25,11 @@ public class ParticipantOutboundPort extends AbstractOutboundPort implements Reg
     public Set<ConnectionInfo> registerAccessPoint(P2PAddressI address, String communicationInboundPortURI, PositionI initialPositionI, double initialRange, String routingInboudPortURI) throws Exception{
         return ((RegistrationCI)this.getConnector()).registerInternal(address, communicationInboundPortURI, initialPositionI, initialRange, routingInboudPortURI);
     }
-
+/*
     @Override
     public void unregister(P2PAddressI address) {
 
     }
+
+ */
 }

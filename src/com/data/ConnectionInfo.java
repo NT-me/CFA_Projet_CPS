@@ -11,10 +11,18 @@ public class ConnectionInfo {
     private double initialRange;
     private String routingInboundPortUri;
 
-    public ConnectionInfo(P2PAddressI address, String communicationUnboudPortUri, PositionI initialPosition, double initialRange, String routingInboundPortUri) {
-        this.address = address;
+    public ConnectionInfo(P2PAddressI address,
+                          String communicationUnboudPortUri,
+                          PositionI initialPosition,
+                          double initialRange,
+                          String routingInboundPortUri) {
+        if(address instanceof P2PAddress){
+            this.address = address;
+        }
         this.communicationUnboudPortUri = communicationUnboudPortUri;
-        this.initialPosition = initialPosition;
+        if (initialPosition instanceof Position){
+            this.initialPosition = initialPosition;
+        }
         this.initialRange = initialRange;
         this.routingInboundPortUri = routingInboundPortUri;
     }
@@ -25,6 +33,14 @@ public class ConnectionInfo {
 
     public String getCommunicationInboundPortURI(){
         return this.communicationUnboudPortUri;
+    }
+
+    public PositionI getInitialPosition() {
+        return initialPosition;
+    }
+
+    public double getInitialRange() {
+        return initialRange;
     }
 
     public String getRoutingInboundPortURI(){
