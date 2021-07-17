@@ -70,6 +70,7 @@ public class Participant extends AbstractComponent {
                 this.myInformations.getRoutingInboundPortURI()
         );
 
+        //Pour chaque voisin reçu du simulateur, on rempli notre table de port et on initialise notre table de routage
         for (ConnectionInfo coi : this.neighbors){
             this.comAdressPortTable.put(coi.getAddress(), coi.getCommunicationInboundPortURI());
             this.myRoutingTable.addNewNeighbor(coi.getAddress());
@@ -104,6 +105,11 @@ public class Participant extends AbstractComponent {
         }
     }
 
+    //Les tables de routage vont être mise a jour
+    public void updateNeighborsRoutingTable(){
+
+    }
+
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
         //TODO ajouter les nouveaux voisins + se connecter à eux et préparer les ports
         // AJOUTER DANS LES TABLEAUX DE CONNECTIONINFO LES NOUVEAUX VOISINS (SI POSSIBLE CONNECTIONINFO)
@@ -121,7 +127,8 @@ public class Participant extends AbstractComponent {
         if (!this.routingAdressPortTable.containsKey(address)){
             this.routingAdressPortTable.put(address, routingInboundPortURI);
         }
-
+        //routingtable en parametre doit etre celle du destinataire
+        this.myRoutingTable.updateRouting(address, this.myRoutingTable.getRoutes(address));
     }
 
     @Override
@@ -144,6 +151,7 @@ public class Participant extends AbstractComponent {
             registrateOnNetwork();
             newOnNetwork();
 
+            updateNeighborsRoutingTable();
             //System.out.println(this.neighbors);
             //System.out.println(this.comAdressPortTable);
         } catch (Exception e) {

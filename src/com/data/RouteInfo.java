@@ -10,6 +10,9 @@ public class RouteInfo {
         this.numberOfHops = numberOfHops;
     }
 
+    public RouteInfo() {
+    }
+
     public AddressI getDestination() {
         return Destination;
     }
