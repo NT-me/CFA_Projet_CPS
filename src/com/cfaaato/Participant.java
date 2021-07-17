@@ -105,10 +105,7 @@ public class Participant extends AbstractComponent {
         }
     }
 
-    //Les tables de routage vont être mise a jour
-    public void updateNeighborsRoutingTable(){
 
-    }
 
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
         //TODO ajouter les nouveaux voisins + se connecter à eux et préparer les ports
@@ -130,7 +127,10 @@ public class Participant extends AbstractComponent {
         //routingtable en parametre doit etre celle du destinataire
         this.myRoutingTable.updateRouting(address, this.myRoutingTable.getRoutes(address));
     }
-
+    //Les tables de routage vont être mise a jour
+    public void updateNeighborsRoutingTable(){
+        System.out.println(this.myRoutingTable);
+    }
     @Override
     public void start() throws ComponentStartException {
         super.start();
