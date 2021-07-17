@@ -96,10 +96,7 @@ public class Participant extends AbstractComponent {
         }
     }
 
-    //Les tables de routage vont être mise a jour
-    public void updateNeighborsRoutingTable(){
 
-    }
 
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
         if (!this.comAddressPortTable.containsKey(address)){
@@ -169,6 +166,11 @@ public class Participant extends AbstractComponent {
         }
     }
 
+
+    //Les tables de routage vont être mise a jour
+    public void updateNeighborsRoutingTable(){
+        System.out.println(this.myRoutingTable);
+    }
 
     @Override
     public void start() throws ComponentStartException {
