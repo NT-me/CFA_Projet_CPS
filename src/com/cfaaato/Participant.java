@@ -26,6 +26,7 @@ public class Participant extends AbstractComponent {
     private Set<ConnectionInfo> neighbors;
     private HashMap<P2PAddressI, String> comAddressPortTable = new HashMap<P2PAddressI, String>();
     private HashMap<P2PAddressI, String> routingAddressPortTable = new HashMap<P2PAddressI, String>();
+    private RoutingTable myRoutingTable = new RoutingTable();
     private Position pos;
 
     protected Participant(int nbThreads, int nbSchedulableThreads, Position pos) throws Exception {
@@ -64,6 +65,7 @@ public class Participant extends AbstractComponent {
 
         for (ConnectionInfo coi : this.neighbors){
             this.comAddressPortTable.put(coi.getAddress(), coi.getCommunicationInboundPortURI());
+            this.myRoutingTable.addNewNeighbor(coi.getAddress());
         }
     }
 
