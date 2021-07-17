@@ -1,5 +1,6 @@
 package com.port;
 
+import com.cfaaato.Participant;
 import com.data.ConnectionInfo;
 import com.services.*;
 import fr.sorbonne_u.components.ComponentI;
@@ -23,13 +24,17 @@ public class ParticipantOutboundPort extends AbstractOutboundPort implements Reg
         return ((RegistrationCI)this.getConnector()).registerInternal(address, communicationInboundPortURI, initialPositionI, initialRange, routingInboudPortURI);
     }
 
+
     @Override
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
-
+        ((CommunicationCI)this.getConnector()).connect(
+                address,
+                communicationInboundPortURI,
+                routingInboundPortURI);
     }
-
+/*
     @Override
-    public void routeMessage(MessageI m) {
+    public void routeMessage(MessageIm) {
 
     }
 
@@ -37,6 +42,7 @@ public class ParticipantOutboundPort extends AbstractOutboundPort implements Reg
     public void ping() {
 
     }
+    */
 /*
     @Override
     public void unregister(P2PAddressI address) {

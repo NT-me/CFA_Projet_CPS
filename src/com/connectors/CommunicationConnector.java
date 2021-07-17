@@ -1,4 +1,17 @@
 package com.connectors;
 
-public class CommunicationConnector {
+import com.services.CommunicationCI;
+import com.services.P2PAddressI;
+import fr.sorbonne_u.components.connectors.AbstractConnector;
+
+public class CommunicationConnector extends AbstractConnector implements CommunicationCI {
+    @Override
+    public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
+        // ((ResultReceptionCI)this.offering).acceptResult(serialNo, result);
+        ((CommunicationCI)this.offering).connect(
+                address,
+                communicationInboundPortURI,
+                routingInboundPortURI
+        );
+    }
 }
