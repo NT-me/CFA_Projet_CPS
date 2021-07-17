@@ -16,7 +16,12 @@ public class ParticipantRegistrationOutboundPort extends AbstractOutboundPort im
 
     @Override
     public Set<ConnectionInfo> registerInternal(P2PAddressI address, String communicationInboundPortURI, PositionI initialPositionI, double initialRange, String routingInboudPortURI) throws Exception {
-        return ((RegistrationCI)this.getConnector()).registerInternal(address, communicationInboundPortURI, initialPositionI, initialRange, routingInboudPortURI);
+        return ((RegistrationCI)this.getConnector()).registerInternal(
+                address,
+                communicationInboundPortURI,
+                initialPositionI,
+                initialRange,
+                routingInboudPortURI);
     }
 
     @Override

@@ -54,7 +54,7 @@ public class Participant extends AbstractComponent {
         P2PAddress P2PAdress_init = new P2PAddress();
         //Position pos = new Position(3, 4);
         ConnectionInfo myInfo_init = new ConnectionInfo(P2PAdress_init,
-                this.pop.getPortURI(),
+                this.pip.getPortURI(),
                 this.pos,
                 ConstantsValues.RANGE_MAX_A,
                 "0");
@@ -85,7 +85,8 @@ public class Participant extends AbstractComponent {
                     CommunicationConnector.class.getCanonicalName()
             );
 
-            this.pcop.connect(this.myInformations.getAddress(),
+            this.pcop.connect(
+                    this.myInformations.getAddress(),
                     this.pip.getPortURI(),
                     "");
 
@@ -94,13 +95,13 @@ public class Participant extends AbstractComponent {
                     coi.getCommunicationInboundPortURI()
             );
         }
-        System.out.println(this.comAdressPortTable);
     }
 
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI){
         //TODO ajouter les nouveaux voisins + se connecter à eux et préparer les ports
         // AJOUTER DANS LES TABLEAUX DE CONNECTIONINFO LES NOUVEAUX VOISINS (SI POSSIBLE CONNECTIONINFO)
         //System.out.println("coucou");
+        System.out.println(this.myInformations.getCommunicationInboundPortURI() + " | "+ communicationInboundPortURI);
         if (!this.comAdressPortTable.containsKey(address)){
             this.comAdressPortTable.put(address, communicationInboundPortURI);
         }
@@ -129,7 +130,8 @@ public class Participant extends AbstractComponent {
             registrateOnNetwork();
             newOnNetwork();
 
-            System.out.println(this.neighbors);
+            //System.out.println(this.neighbors);
+            //System.out.println(this.comAdressPortTable);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,6 +140,7 @@ public class Participant extends AbstractComponent {
     @Override
     public void finalise() throws Exception
     {
+        System.out.println(this.comAdressPortTable);
         this.doPortDisconnection(this.pop.getPortURI());
         this.pop.unpublishPort();
 
