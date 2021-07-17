@@ -108,7 +108,6 @@ public class Participant extends AbstractComponent {
 
             this.logMessage(" fin Tour :"+Tour+ " neighbor :"+ coi.getAddress());
             Tour++;
-
         }
     }
 
