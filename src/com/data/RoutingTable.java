@@ -72,5 +72,3 @@ public class RoutingTable implements RoutingManagementCI {
     public Set<RouteInfo> getRoutes(P2PAddressI address){
         return this.table.get(address);
     }
-
-}

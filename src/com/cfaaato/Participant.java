@@ -1,23 +1,16 @@
 package com.cfaaato;
 
-import com.connectors.CommunicationConnector;
-import com.connectors.RegistrationConnector;
-import com.data.ConnectionInfo;
-import com.data.P2PAddress;
-import com.data.Position;
-import com.port.ParticipantCommunicationOutboundPort;
-import com.port.ParticipantCommunicationInboundPort;
-import com.port.ParticipantRegistrationOutboundPort;
+import com.connectors.*;
+import com.data.*;
+import com.port.*;
 import com.services.*;
-import com.utils.ConstantsValues;
-import fr.sorbonne_u.components.AbstractComponent;
-import fr.sorbonne_u.components.annotations.OfferedInterfaces;
-import fr.sorbonne_u.components.annotations.RequiredInterfaces;
-import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import com.utils.*;
+import fr.sorbonne_u.components.*;
+import fr.sorbonne_u.components.annotations.*;
+import fr.sorbonne_u.components.exceptions.*;
+import fr.sorbonne_u.components.helpers.*;
+
+import java.util.*;
 
 @RequiredInterfaces(required={RegistrationCI.class, CommunicationCI.class})
 @OfferedInterfaces(offered = {CommunicationCI.class})
@@ -30,6 +23,7 @@ public class Participant extends AbstractComponent {
     private Set<ConnectionInfo> neighbors;
     private HashMap<P2PAddressI, String> comAddressPortTable = new HashMap<P2PAddressI, String>();
     private HashMap<P2PAddressI, String> routingAddressPortTable = new HashMap<P2PAddressI, String>();
+    private RoutingTable myRoutingTable = new RoutingTable();
     private Position pos;
     private Logger myLogger;
 
@@ -80,6 +74,7 @@ public class Participant extends AbstractComponent {
     }
 
     public void newOnNetwork() throws Exception {
+        //TODO se connecte aux anciens voisins -- seems ok
 
         this.logMessage(this.myInformations.getAddress().toString());
         this.logMessage(" nb neighbors : "+ this.neighbors.size());
