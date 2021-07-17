@@ -9,16 +9,16 @@ import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
-public class ParticipantInboundPort  extends AbstractOutboundPort implements CommunicationCI {
-    public ParticipantInboundPort(String uri, Class<? extends RequiredCI> implementedInterface, ComponentI owner) throws Exception {
+public class ParticipantCommunicationInboundPort extends AbstractOutboundPort implements CommunicationCI {
+    public ParticipantCommunicationInboundPort(String uri, Class<? extends RequiredCI> implementedInterface, ComponentI owner) throws Exception {
         super(uri, implementedInterface, owner);
     }
 
-    public ParticipantInboundPort(String uri, ComponentI owner) throws Exception {
+    public ParticipantCommunicationInboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, CommunicationCI.class, owner);
     }
 
-    public ParticipantInboundPort(Class<? extends RequiredCI> implementedInterface, ComponentI owner) throws Exception {
+    public ParticipantCommunicationInboundPort(Class<? extends RequiredCI> implementedInterface, ComponentI owner) throws Exception {
         super(implementedInterface, owner);
     }
 

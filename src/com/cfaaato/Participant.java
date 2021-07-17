@@ -5,9 +5,9 @@ import com.connectors.RegistrationConnector;
 import com.data.ConnectionInfo;
 import com.data.P2PAddress;
 import com.data.Position;
-import com.port.ParticipantInboundPort;
-import com.port.ParticipantOutboundPort;
-import com.port.SimulatorInboundPort;
+import com.port.ParticipantCommunicationOutboundPort;
+import com.port.ParticipantCommunicationInboundPort;
+import com.port.ParticipantRegistrationOutboundPort;
 import com.services.CommunicationCI;
 import com.services.P2PAddressI;
 import com.services.RegistrationCI;
@@ -23,10 +23,11 @@ import java.util.UUID;
 
 @RequiredInterfaces(required={RegistrationCI.class, CommunicationCI.class})
 @OfferedInterfaces(offered = {CommunicationCI.class})
-public class Participant extends AbstractComponent { 
+public class Participant extends AbstractComponent {
 
-    protected ParticipantOutboundPort pop;
-    protected ParticipantInboundPort pip;
+    protected ParticipantRegistrationOutboundPort pop;
+    protected ParticipantCommunicationOutboundPort pcop;
+    protected ParticipantCommunicationInboundPort pip;
     private ConnectionInfo myInformations;
     private Set<ConnectionInfo> neighbors;
     private HashMap<P2PAddressI, String> comAdressPortTable = new HashMap<P2PAddressI, String>();
@@ -46,7 +47,7 @@ public class Participant extends AbstractComponent {
 
     public void registrateOnNetwork() throws Exception {
 
-        this.pop = new ParticipantOutboundPort(this);   //creation du port
+        this.pop = new ParticipantRegistrationOutboundPort(this);   //creation du port
         this.pop.publishPort();     //publication du port
         this.doPortConnection(this.pop.getPortURI(), ConstantsValues.URI_REGISTRATION_SIMULATOR_PORT, RegistrationConnector.class.getCanonicalName());
 
@@ -76,13 +77,15 @@ public class Participant extends AbstractComponent {
         //TODO se connecte aux anciens voisins -- seems ok
 
         for (ConnectionInfo coi : this.neighbors){
+            this.pcop = new ParticipantCommunicationOutboundPort(this);   //creation du port
+            this.pcop.publishPort();     //publication du port
             this.doPortConnection(
-                    this.pop.getPortURI(),
+                    this.pcop.getPortURI(),
                     coi.getCommunicationInboundPortURI(),
                     CommunicationConnector.class.getCanonicalName()
             );
 
-            this.pop.connect(this.myInformations.getAddress(),
+            this.pcop.connect(this.myInformations.getAddress(),
                     this.pip.getPortURI(),
                     "");
 
@@ -112,7 +115,7 @@ public class Participant extends AbstractComponent {
     public void start() throws ComponentStartException {
         super.start();
         try {
-            this.pip = new ParticipantInboundPort(UUID.randomUUID().toString(),this);
+            this.pip = new ParticipantCommunicationInboundPort(UUID.randomUUID().toString(),this);
             this.pip.publishPort();
         } catch (Exception e) {
             e.printStackTrace();

@@ -8,9 +8,9 @@ import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
 import java.util.Set;
 
-public class ParticipantOutboundPort extends AbstractOutboundPort implements RegistrationCI, CommunicationCI {
+public class ParticipantRegistrationOutboundPort extends AbstractOutboundPort implements RegistrationCI {
 
-    public ParticipantOutboundPort(ComponentI owner) throws Exception{
+    public ParticipantRegistrationOutboundPort(ComponentI owner) throws Exception{
         super(RegistrationCI.class,owner);
     }
 
@@ -24,14 +24,6 @@ public class ParticipantOutboundPort extends AbstractOutboundPort implements Reg
         return ((RegistrationCI)this.getConnector()).registerInternal(address, communicationInboundPortURI, initialPositionI, initialRange, routingInboudPortURI);
     }
 
-
-    @Override
-    public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
-        ((CommunicationCI)this.getConnector()).connect(
-                address,
-                communicationInboundPortURI,
-                routingInboundPortURI);
-    }
 /*
     @Override
     public void routeMessage(MessageIm) {
