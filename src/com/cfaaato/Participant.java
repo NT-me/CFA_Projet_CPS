@@ -77,8 +77,7 @@ public class Participant extends AbstractComponent {
         //TODO se connecte aux anciens voisins -- seems ok
 
         for (ConnectionInfo coi : this.neighbors){
-            this.pcop = new ParticipantCommunicationOutboundPort(this);   //creation du port
-            this.pcop.publishPort();     //publication du port
+
             this.doPortConnection(
                     this.pcop.getPortURI(),
                     coi.getCommunicationInboundPortURI(),
@@ -94,16 +93,26 @@ public class Participant extends AbstractComponent {
                     coi.getAddress(),
                     coi.getCommunicationInboundPortURI()
             );
+
+            this.routingAdressPortTable.put(
+                    coi.getAddress(),
+                    coi.getRoutingInboundPortURI()
+            );
         }
     }
 
-    public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI){
+    public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
         //TODO ajouter les nouveaux voisins + se connecter à eux et préparer les ports
         // AJOUTER DANS LES TABLEAUX DE CONNECTIONINFO LES NOUVEAUX VOISINS (SI POSSIBLE CONNECTIONINFO)
         //System.out.println("coucou");
         System.out.println(this.myInformations.getCommunicationInboundPortURI() + " | "+ communicationInboundPortURI);
         if (!this.comAdressPortTable.containsKey(address)){
             this.comAdressPortTable.put(address, communicationInboundPortURI);
+            this.doPortConnection(
+                    this.pcop.getPortURI(),
+                    communicationInboundPortURI,
+                    CommunicationConnector.class.getCanonicalName()
+            );
         }
 
         if (!this.routingAdressPortTable.containsKey(address)){
@@ -118,6 +127,8 @@ public class Participant extends AbstractComponent {
         try {
             this.pip = new ParticipantCommunicationInboundPort(UUID.randomUUID().toString(),this);
             this.pip.publishPort();
+            this.pcop = new ParticipantCommunicationOutboundPort(this);   //creation du port
+            this.pcop.publishPort();     //publication du port
         } catch (Exception e) {
             e.printStackTrace();
         }
