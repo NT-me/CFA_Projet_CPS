@@ -10,13 +10,13 @@ import java.util.Set;
 
 public class RegistrationConnector extends AbstractConnector implements RegistrationCI {
     @Override
-    public Set<ConnectionInfo> registerInternal(P2PAddressI address, String communicationInboundPortURI, PositionI initialPositionI, double initialRange, String routingInboudPortURI) throws Exception {
-        return ((RegistrationCI)this.offering).registerInternal(address, communicationInboundPortURI, initialPositionI, initialRange, routingInboudPortURI);
+    public Set<ConnectionInfo> registerInternal(P2PAddressI address, String communicationInboundPortURI, PositionI initialPositionI, double initialRange, String routingInboundPortURI) throws Exception {
+        return ((RegistrationCI)this.offering).registerInternal(address, communicationInboundPortURI, initialPositionI, initialRange, routingInboundPortURI);
     }
 
     @Override
-    public Set<ConnectionInfo> registerAccessPoint(P2PAddressI address, String communicationInboundPortURI, PositionI initialPositionI, double initialRange, String routingInboudPortURI) throws Exception{
-        return ((RegistrationCI)this.offering).registerAccessPoint(address,communicationInboundPortURI,initialPositionI,initialRange,routingInboudPortURI);
+    public Set<ConnectionInfo> registerAccessPoint(P2PAddressI address, String communicationInboundPortURI, PositionI initialPositionI, double initialRange, String routingInboundPortURI) throws Exception{
+        return ((RegistrationCI)this.offering).registerAccessPoint(address,communicationInboundPortURI,initialPositionI,initialRange, routingInboundPortURI);
     }
 /*
     @Override

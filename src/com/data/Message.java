@@ -15,7 +15,7 @@ public class Message implements MessageI {
 
     public Message(AddressI adress) {
         this.adress = adress;
-        this.content = "Empty";
+        this.content = "Full";
         this.stillAlive = true;
         this.hops = ConstantsValues.MAX_HOPS;
     }

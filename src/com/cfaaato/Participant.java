@@ -19,46 +19,42 @@ import java.util.*;
 @OfferedInterfaces(offered = {CommunicationCI.class})
 public class Participant extends AbstractComponent {
 
-    protected ParticipantRegistrationOutboundPort pop;
+    protected ParticipantRegistrationOutboundPort prop;
     protected ParticipantCommunicationOutboundPort pcop;
-    protected ParticipantCommunicationInboundPort pip;
+    protected ParticipantCommunicationInboundPort pcip;
     private ConnectionInfo myInformations;
     private Set<ConnectionInfo> neighbors;
-    private HashMap<P2PAddressI, String> comAdressPortTable = new HashMap<P2PAddressI, String>();
-    private HashMap<P2PAddressI, String> routingAdressPortTable = new HashMap<P2PAddressI, String>();
+    private HashMap<P2PAddressI, String> comAddressPortTable = new HashMap<P2PAddressI, String>();
+    private HashMap<P2PAddressI, String> routingAddressPortTable = new HashMap<P2PAddressI, String>();
     private Position pos;
 
     protected Participant(int nbThreads, int nbSchedulableThreads, Position pos) throws Exception {
         super(nbThreads, nbSchedulableThreads);
         this.neighbors = new HashSet<ConnectionInfo>();
         this.pos = pos;
-        this.pip = new ParticipantCommunicationInboundPort(UUID.randomUUID().toString(),this);
-        this.pip.publishPort();
-        this.pcop = new ParticipantCommunicationOutboundPort(this);   //creation du port
-        this.pcop.publishPort();     //publication du port
-    }
-
-    protected Participant(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, Position pos) throws Exception {
-        super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
-        this.pos = pos;
+        //creation des ports
+        this.pcip = new ParticipantCommunicationInboundPort(UUID.randomUUID().toString(),this);
+        this.pcop = new ParticipantCommunicationOutboundPort(this);
+        //publication des ports
+        this.pcip.publishPort();
+        this.pcop.publishPort();
     }
 
     public void registrateOnNetwork() throws Exception {
+        this.prop = new ParticipantRegistrationOutboundPort(this);   //creation du port
+        this.prop.publishPort();     //publication du port
+        this.doPortConnection(this.prop.getPortURI(), ConstantsValues.URI_REGISTRATION_SIMULATOR_PORT, RegistrationConnector.class.getCanonicalName());
 
-        this.pop = new ParticipantRegistrationOutboundPort(this);   //creation du port
-        this.pop.publishPort();     //publication du port
-        this.doPortConnection(this.pop.getPortURI(), ConstantsValues.URI_REGISTRATION_SIMULATOR_PORT, RegistrationConnector.class.getCanonicalName());
-
-        P2PAddress P2PAdress_init = new P2PAddress();
-        //Position pos = new Position(3, 4);
-        ConnectionInfo myInfo_init = new ConnectionInfo(P2PAdress_init,
-                this.pip.getPortURI(),
+        P2PAddress P2PAddress_init = new P2PAddress();
+        ConnectionInfo myInfo_init = new ConnectionInfo(P2PAddress_init,
+                this.pcip.getPortURI(),
                 this.pos,
                 ConstantsValues.RANGE_MAX_A,
                 "0");
         this.myInformations = myInfo_init;
 
-        this.neighbors = this.pop.registerInternal(
+        //Iniitialisation de la liste de voisins directs
+        this.neighbors = this.prop.registerInternal(
                 this.myInformations.getAddress(),
                 this.myInformations.getCommunicationInboundPortURI(),
                 this.myInformations.getInitialPosition(),
@@ -67,7 +63,7 @@ public class Participant extends AbstractComponent {
         );
 
         for (ConnectionInfo coi : this.neighbors){
-            this.comAdressPortTable.put(coi.getAddress(), coi.getCommunicationInboundPortURI());
+            this.comAddressPortTable.put(coi.getAddress(), coi.getCommunicationInboundPortURI());
         }
     }
 
@@ -82,15 +78,15 @@ public class Participant extends AbstractComponent {
 
             this.pcop.connect(
                     this.myInformations.getAddress(),
-                    this.pip.getPortURI(),
+                    this.pcip.getPortURI(),
                     "");
 
-            this.comAdressPortTable.put(
+            this.comAddressPortTable.put(
                     coi.getAddress(),
                     coi.getCommunicationInboundPortURI()
             );
 
-            this.routingAdressPortTable.put(
+            this.routingAddressPortTable.put(
                     coi.getAddress(),
                     coi.getRoutingInboundPortURI()
             );
@@ -98,8 +94,8 @@ public class Participant extends AbstractComponent {
     }
 
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
-        if (!this.comAdressPortTable.containsKey(address)){
-            this.comAdressPortTable.put(address, communicationInboundPortURI);
+        if (!this.comAddressPortTable.containsKey(address)){
+            this.comAddressPortTable.put(address, communicationInboundPortURI);
             this.doPortConnection(
                     this.pcop.getPortURI(),
                     communicationInboundPortURI,
@@ -107,13 +103,14 @@ public class Participant extends AbstractComponent {
             );
         }
 
-        if (!this.routingAdressPortTable.containsKey(address)){
-            this.routingAdressPortTable.put(address, routingInboundPortURI);
+        if (!this.routingAddressPortTable.containsKey(address)){
+            this.routingAddressPortTable.put(address, routingInboundPortURI);
         }
 
     }
 
-public void floodMessageTransit(MessageI m) throws Exception {
+    public void floodMessageTransit(Message m) throws Exception {
+        //if the message hit the receiver,
         if (m.getAddress().equals(this.myInformations.getAddress())){
             System.out.println(
                     this.myInformations.getAddress().toString()
@@ -127,7 +124,7 @@ public void floodMessageTransit(MessageI m) throws Exception {
             m.decrementHops();
             if (m.stillAlive()){
                 // Iterating HashMap through for loop
-                for (Map.Entry<P2PAddressI, String> item : this.comAdressPortTable.entrySet()) {
+                for (Map.Entry<P2PAddressI, String> item : this.comAddressPortTable.entrySet()) {
                     if(pcop.connected()){
                         pcop.doDisconnection();
                     }
@@ -158,7 +155,8 @@ public void floodMessageTransit(MessageI m) throws Exception {
 
     public void routeMessage(MessageI m) throws Exception {
         if (m instanceof MessageI){
-            floodMessageTransit(m);
+            Message msg = (Message) m;
+            floodMessageTransit(msg);
         }
     }
 
@@ -179,8 +177,8 @@ public void floodMessageTransit(MessageI m) throws Exception {
         try {
             registrateOnNetwork();
             newOnNetwork();
-            if (this.comAdressPortTable.keySet().toArray().length > 0){
-                Object randomName = this.comAdressPortTable.keySet().toArray()[new Random().nextInt(this.comAdressPortTable.keySet().toArray().length)];
+            if (this.comAddressPortTable.keySet().toArray().length > 0){
+                Object randomName = this.comAddressPortTable.keySet().toArray()[new Random().nextInt(this.comAddressPortTable.keySet().toArray().length)];
                 Message msg = new Message((AddressI) randomName);
 
                 routeMessage(msg);
@@ -200,11 +198,11 @@ public void floodMessageTransit(MessageI m) throws Exception {
 
 
 
-        this.doPortDisconnection(this.pop.getPortURI());
-        this.pop.unpublishPort();
+        this.doPortDisconnection(this.prop.getPortURI());
+        this.prop.unpublishPort();
 
         //this.doPortDisconnection(this.pip.getPortURI());
-        this.pip.unpublishPort();
+        this.pcip.unpublishPort();
 
         super.finalise();
     }
