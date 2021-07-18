@@ -26,6 +26,7 @@ public class Participant extends AbstractComponent {
     private Set<ConnectionInfo> neighbors;
     private HashMap<P2PAddressI, String> comAddressPortTable = new HashMap<P2PAddressI, String>();
     private HashMap<P2PAddressI, String> routingAddressPortTable = new HashMap<P2PAddressI, String>();
+    private RoutingTable myRoutingTable = new RoutingTable();
     private Position pos;
 
     protected Participant(int nbThreads, int nbSchedulableThreads, Position pos) throws Exception {
@@ -62,8 +63,10 @@ public class Participant extends AbstractComponent {
                 this.myInformations.getRoutingInboundPortURI()
         );
 
+        //Pour chaque voisin reçu du simulateur, on rempli notre table de port et on initialise notre table de routage
         for (ConnectionInfo coi : this.neighbors){
             this.comAddressPortTable.put(coi.getAddress(), coi.getCommunicationInboundPortURI());
+            this.myRoutingTable.addNewNeighbor(coi.getAddress());
         }
     }
 
@@ -93,6 +96,8 @@ public class Participant extends AbstractComponent {
         }
     }
 
+
+
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
         if (!this.comAddressPortTable.containsKey(address)){
             this.comAddressPortTable.put(address, communicationInboundPortURI);
@@ -106,7 +111,8 @@ public class Participant extends AbstractComponent {
         if (!this.routingAddressPortTable.containsKey(address)){
             this.routingAddressPortTable.put(address, routingInboundPortURI);
         }
-
+        //routingtable en parametre doit etre celle du destinataire
+        this.myRoutingTable.updateRouting(address, this.myRoutingTable.getRoutes(address));
     }
 
     public void floodMessageTransit(Message m) throws Exception {
@@ -161,6 +167,11 @@ public class Participant extends AbstractComponent {
     }
 
 
+    //Les tables de routage vont être mise a jour
+    public void updateNeighborsRoutingTable(){
+        System.out.println(this.myRoutingTable);
+    }
+
     @Override
     public void start() throws ComponentStartException {
         super.start();
@@ -177,14 +188,13 @@ public class Participant extends AbstractComponent {
         try {
             registrateOnNetwork();
             newOnNetwork();
+            updateNeighborsRoutingTable();
             if (this.comAddressPortTable.keySet().toArray().length > 0){
                 Object randomName = this.comAddressPortTable.keySet().toArray()[new Random().nextInt(this.comAddressPortTable.keySet().toArray().length)];
                 Message msg = new Message((AddressI) randomName);
-
                 routeMessage(msg);
             }
             System.out.println(this.neighbors);
-            //System.out.println(this.comAdressPortTable);
         } catch (Exception e) {
             e.printStackTrace();
         }
