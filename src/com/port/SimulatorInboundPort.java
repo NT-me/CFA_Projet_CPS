@@ -37,13 +37,13 @@ public class SimulatorInboundPort extends AbstractInboundPort implements Registr
     }
 
     @Override
-    public Set<ConnectionInfo> registerInternal(P2PAddressI address, String communicationInboundPortURI, PositionI initialPositionI, double initialRange, String routingInboudPortURI) throws Exception{
-        ConnectionInfo deviceInfs = new ConnectionInfo(address,communicationInboundPortURI,initialPositionI,initialRange,routingInboudPortURI);
+    public Set<ConnectionInfo> registerInternal(P2PAddressI address, String communicationInboundPortURI, PositionI initialPositionI, double initialRange, String routingInboundPortURI) throws Exception{
+        ConnectionInfo deviceInfs = new ConnectionInfo(address,communicationInboundPortURI,initialPositionI,initialRange, routingInboundPortURI);
         return this.getOwner().handleRequest( s -> ((Simulator) s ).registerInternal(deviceInfs));
     }
 
     @Override
-    public Set<ConnectionInfo> registerAccessPoint(P2PAddressI address, String communicationInboundPortURI, PositionI initialPositionI, double initialRange, String routingInboudPortURI) {
+    public Set<ConnectionInfo> registerAccessPoint(P2PAddressI address, String communicationInboundPortURI, PositionI initialPositionI, double initialRange, String routingInboundPortURI) {
         return null;
     }
 
