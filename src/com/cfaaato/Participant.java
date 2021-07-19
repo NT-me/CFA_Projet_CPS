@@ -146,14 +146,11 @@ public class Participant extends AbstractComponent {
                                     + " | Msg send to : "
                                     + m.getAddress()
                     );
-
                     this.pcop.routeMessage(m);
                 }
                 pcop.doDisconnection();
-
             }
             else{
-
                 System.out.println("Msg died");
             }
         }
