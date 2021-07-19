@@ -11,6 +11,7 @@ public class RouteInfo {
     }
 
     public RouteInfo() {
+
     }
 
     public AddressI getDestination() {

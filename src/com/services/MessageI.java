@@ -6,7 +6,7 @@ public interface MessageI {
 
     /**
      * Description : Returns the address of the aimed device
-     * @return address of type AddressI - the address of the
+     * @return address of type AddressI - the address of the receiver
      */
     public AddressI getAddress();
 
@@ -17,7 +17,7 @@ public interface MessageI {
     public Serializable getContent();
 
     /**
-     * Description :
+     * Description : Ensure that the message is still active and alive during transportation
      * @return value of type boolean - True if message is still alive otherwise False
      */
     public boolean stillAlive();

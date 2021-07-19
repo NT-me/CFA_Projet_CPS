@@ -1,17 +1,13 @@
 package com.data;
 
-import com.services.P2PAddressI;
-import com.services.RoutingManagementCI;
+import com.services.*;
 
-import com.data.RouteInfo;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class RoutingTable implements RoutingManagementCI {
 
-    //Chaque P2PAddressI est un voisin du participant à qui la table de routage appartient. Ce dernier aura plusieurs RouteInfo pour tout les autres participants
+    //Chaque P2PAddressI est un voisin du participant à qui la table de routage appartient.
+    // Ce dernier aura plusieurs RouteInfo pour tout les autres participants.
     HashMap<P2PAddressI, Set<RouteInfo>> table;
 
     public RoutingTable() {
@@ -78,4 +74,3 @@ public class RoutingTable implements RoutingManagementCI {
     }
 
 }
-
