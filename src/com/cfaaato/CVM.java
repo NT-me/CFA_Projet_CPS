@@ -15,21 +15,40 @@ public class CVM extends AbstractCVM {
     public void deploy() throws Exception{
         Random rd = new Random(); // creating Random object
         rd.nextInt();
+        //Create the playground
         AbstractComponent.createComponent(
                 Simulator.class.getCanonicalName(), new Object[]{1,0}
         );
 
+        //Adding P2P elements inside the simulator
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+        //#1
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+        //#2
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+        //#3
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+        //#4
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+        //#5
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+        //#6
         AbstractComponent.createComponent(
                 Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
         );
 
-        AbstractComponent.createComponent(
-                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
-        );
-
-        AbstractComponent.createComponent(
-                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
-        );
         super.deploy();
     }
     public static void main(String[] args) {

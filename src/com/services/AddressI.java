@@ -1,6 +1,6 @@
 package com.services;
 
-public interface AddressI extends P2PAddressI,IPAddressI{
+public interface AddressI{
 
     boolean isP2PAddress();
 

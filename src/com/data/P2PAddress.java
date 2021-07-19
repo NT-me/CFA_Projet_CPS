@@ -1,5 +1,6 @@
 package com.data;
 
+import com.services.AddressI;
 import com.services.P2PAddressI;
 
 public class P2PAddress implements P2PAddressI {
@@ -24,5 +25,10 @@ public class P2PAddress implements P2PAddressI {
     @Override
     public boolean isIPAddress() {
         return isIPAddress;
+    }
+
+    @Override
+    public boolean equals(AddressI a) {
+        return a.hashCode() == this.hashCode();
     }
 }

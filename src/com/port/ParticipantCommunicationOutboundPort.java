@@ -1,6 +1,7 @@
 package com.port;
 
 import com.services.CommunicationCI;
+import com.services.MessageI;
 import com.services.P2PAddressI;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
@@ -17,5 +18,10 @@ public class ParticipantCommunicationOutboundPort extends AbstractOutboundPort i
                 address,
                 communicationInboundPortURI,
                 routingInboundPortURI);
+    }
+
+    @Override
+    public void routeMessage(MessageI m) throws Exception {
+        ((CommunicationCI)this.getConnector()).routeMessage(m);
     }
 }

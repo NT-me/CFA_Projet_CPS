@@ -1,6 +1,7 @@
 package com.connectors;
 
 import com.services.CommunicationCI;
+import com.services.MessageI;
 import com.services.P2PAddressI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
@@ -12,5 +13,10 @@ public class CommunicationConnector extends AbstractConnector implements Communi
                 communicationInboundPortURI,
                 routingInboundPortURI
         );
+    }
+
+    @Override
+    public void routeMessage(MessageI m) throws Exception {
+        ((CommunicationCI)this.offering).routeMessage(m);
     }
 }

@@ -37,12 +37,21 @@ public class ParticipantCommunicationInboundPort extends AbstractOutboundPort im
                     return null;
                 });
     }
-    /*
+
     @Override
-    public void routeMessage(MessageI m) {
+    public void routeMessage(MessageI m) throws Exception {
+        this.getOwner().handleRequest(
+                p -> {
+                    try {
+                        ((Participant) p).routeMessage(m);
 
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    return null;
+                });
     }
-
+    /*
     @Override
     public void ping() {
 
