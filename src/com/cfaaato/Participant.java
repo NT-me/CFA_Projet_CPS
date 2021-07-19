@@ -3,6 +3,7 @@ package com.cfaaato;
 import com.connectors.CommunicationConnector;
 import com.connectors.RegistrationConnector;
 import com.data.*;
+import com.plugins.P2PDevice;
 import com.port.ParticipantCommunicationOutboundPort;
 import com.port.ParticipantCommunicationInboundPort;
 import com.port.ParticipantRegistrationOutboundPort;
@@ -12,6 +13,7 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+
 
 import java.util.*;
 
@@ -28,6 +30,88 @@ public class Participant extends AbstractComponent {
     private HashMap<P2PAddressI, String> routingAddressPortTable = new HashMap<P2PAddressI, String>();
     private RoutingTable myRoutingTable = new RoutingTable();
     private Position pos;
+
+    private String PLUGIN_URI = UUID.randomUUID().toString();
+
+    public ParticipantRegistrationOutboundPort getProp() {
+        return prop;
+    }
+
+    public ParticipantCommunicationOutboundPort getPcop() {
+        return pcop;
+    }
+
+    public ParticipantCommunicationInboundPort getPcip() {
+        return pcip;
+    }
+
+    public void setProp(ParticipantRegistrationOutboundPort prop) {
+        this.prop = prop;
+    }
+
+    public void setPcop(ParticipantCommunicationOutboundPort pcop) {
+        this.pcop = pcop;
+    }
+
+    public void setPcip(ParticipantCommunicationInboundPort pcip) {
+        this.pcip = pcip;
+    }
+
+    public ConnectionInfo getMyInformations() {
+        return myInformations;
+    }
+
+    public void setMyInformations(ConnectionInfo myInformations) {
+        this.myInformations = myInformations;
+    }
+
+    public Set<ConnectionInfo> getNeighbors() {
+        return neighbors;
+    }
+
+    public void setNeighbors(Set<ConnectionInfo> neighbors) {
+        this.neighbors = neighbors;
+    }
+
+    public HashMap<P2PAddressI, String> getComAddressPortTable() {
+        return comAddressPortTable;
+    }
+
+    public void setComAddressPortTable(HashMap<P2PAddressI, String> comAddressPortTable) {
+        this.comAddressPortTable = comAddressPortTable;
+    }
+
+    public HashMap<P2PAddressI, String> getRoutingAddressPortTable() {
+        return routingAddressPortTable;
+    }
+
+    public void setRoutingAddressPortTable(HashMap<P2PAddressI, String> routingAddressPortTable) {
+        this.routingAddressPortTable = routingAddressPortTable;
+    }
+
+    public RoutingTable getMyRoutingTable() {
+        return myRoutingTable;
+    }
+
+    public void setMyRoutingTable(RoutingTable myRoutingTable) {
+        this.myRoutingTable = myRoutingTable;
+    }
+
+    public Position getPos() {
+        return pos;
+    }
+
+    public void setPos(Position pos) {
+        this.pos = pos;
+    }
+
+    public String getPLUGIN_URI() {
+        return PLUGIN_URI;
+    }
+
+    public void setPLUGIN_URI(String PLUGIN_URI) {
+        this.PLUGIN_URI = PLUGIN_URI;
+    }
 
     protected Participant(int nbThreads, int nbSchedulableThreads, Position pos) throws Exception {
         super(nbThreads, nbSchedulableThreads);
@@ -174,6 +258,13 @@ public class Participant extends AbstractComponent {
         super.start();
         try {
 
+            this.prop = new ParticipantRegistrationOutboundPort(this);   //creation du port
+            this.prop.publishPort();     //publication du port
+
+            P2PDevice p2PDevice = new P2PDevice();
+            p2PDevice.setPluginURI(PLUGIN_URI);
+            this.installPlugin(p2PDevice);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -183,7 +274,8 @@ public class Participant extends AbstractComponent {
     public void execute() throws Exception {
         super.execute();
         try {
-            registrateOnNetwork();
+            //registrateOnNetwork();
+            ((P2PDevice)this.getPlugin(PLUGIN_URI)).registrateOnNetwork();
             newOnNetwork();
             updateNeighborsRoutingTable();
             if (this.comAddressPortTable.keySet().toArray().length > 0){
