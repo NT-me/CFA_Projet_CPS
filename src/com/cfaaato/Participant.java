@@ -39,6 +39,7 @@ public class Participant extends AbstractComponent {
         //publication des ports de communication
         this.pcip.publishPort();
         this.pcop.publishPort();
+
         //creation des ports de routage
         this.prtip = new ParticipantRoutageInboundPort(UUID.randomUUID().toString(),this);
         this.prtop = new ParticipantRoutageOutboundPort(this);
