@@ -4,7 +4,7 @@ import com.services.*;
 
 import java.util.*;
 
-public class RoutingTable implements RoutingManagementCI {
+public class RoutingTable {
 
     //Chaque P2PAddressI est un voisin du participant à qui la table de routage appartient.
     // Ce dernier aura plusieurs RouteInfo pour tout les autres participants.
@@ -22,51 +22,6 @@ public class RoutingTable implements RoutingManagementCI {
     public void addNewNeighbor(P2PAddressI neighbour){
         Set<RouteInfo> empty = new HashSet<RouteInfo>();
         this.table.put(neighbour,empty);
-    }
-
-    @Override
-    public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) {
-        Set<RouteInfo> actualRoutes = getRoutes(neighbour);
-        Set<RouteInfo> neighbourRoutes = routes;
-        Set<RouteInfo> newRoutes = new HashSet<RouteInfo>();
-
-        //Si la table ne contient pas ce participant, il l'ajoute directement
-        if (!this.table.containsKey(neighbour)){
-            this.table.put(neighbour,routes);
-        }
-        else {
-            RouteInfo nRoute = new RouteInfo();
-            RouteInfo aRoute = null;
-            //On récupère et compare chaque route deja presente dans la table avec celle donnée
-            for (int i = 0;i < neighbourRoutes.size();i++) {
-                nRoute = neighbourRoutes.iterator().next();
-                RouteInfo routetmp = new RouteInfo();
-                for (int j = 0; j < actualRoutes.size(); j++) {
-                    routetmp = actualRoutes.iterator().next();
-                    if (routetmp.getDestination().equals(nRoute.getDestination())) {
-                        aRoute = routetmp;
-                    }
-                }
-            }
-                //On verifie si la route existait dans la table, puis on garde la route avec le moins de saut
-                if (aRoute != null){
-                    if (aRoute.getNumberOfHops() < nRoute.getNumberOfHops()){
-                        newRoutes.add(aRoute);
-                    }
-                    else{
-                        newRoutes.add(nRoute);
-                    }
-                }
-                else{
-                    newRoutes.add(nRoute);
-                }
-        }
-        this.table.put(neighbour,newRoutes);
-    }
-
-    @Override
-    public void updateAccessPoint(P2PAddressI neighbour, int numberOfHops) {
-
     }
 
     public Set<RouteInfo> getRoutes(P2PAddressI address){

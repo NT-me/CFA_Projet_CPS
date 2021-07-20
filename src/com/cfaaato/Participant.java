@@ -19,6 +19,8 @@ public class Participant extends AbstractComponent {
     protected ParticipantRegistrationOutboundPort prop;
     protected ParticipantCommunicationOutboundPort pcop;
     protected ParticipantCommunicationInboundPort pcip;
+    protected ParticipantRoutageOutboundPort prtop;
+    protected ParticipantRoutageInboundPort prtip;
     private ConnectionInfo myInformations;
     private Set<ConnectionInfo> neighbors;
     private HashMap<P2PAddressI, String> comAddressPortTable = new HashMap<P2PAddressI, String>();
@@ -31,12 +33,19 @@ public class Participant extends AbstractComponent {
         super(nbThreads, nbSchedulableThreads);
         this.neighbors = new HashSet<ConnectionInfo>();
         this.pos = pos;
-        //creation des ports
+        //creation des ports de communication
         this.pcip = new ParticipantCommunicationInboundPort(UUID.randomUUID().toString(),this);
         this.pcop = new ParticipantCommunicationOutboundPort(this);
-        //publication des ports
+        //publication des ports de communication
         this.pcip.publishPort();
         this.pcop.publishPort();
+        //creation des ports de routage
+        this.prtip = new ParticipantRoutageInboundPort(UUID.randomUUID().toString(),this);
+        this.prtop = new ParticipantRoutageOutboundPort(this);
+        //publication des ports de routage
+        this.prtip.publishPort();
+        this.prtop.publishPort();
+
         myLogger = new Logger(Integer.toString(this.hashCode()));
         this.setLogger(myLogger);
     }
@@ -48,9 +57,8 @@ public class Participant extends AbstractComponent {
         this.prop.publishPort();     //publication du port
         this.doPortConnection(this.prop.getPortURI(), ConstantsValues.URI_REGISTRATION_SIMULATOR_PORT, RegistrationConnector.class.getCanonicalName());
 
-        P2PAddress P2PAdress_init = new P2PAddress();
-        //Position pos = new Position(3, 4);
-        ConnectionInfo myInfo_init = new ConnectionInfo(P2PAdress_init,
+        P2PAddress P2PAddress_init = new P2PAddress();
+        ConnectionInfo myInfo_init = new ConnectionInfo(P2PAddress_init,
                 this.pcip.getPortURI(),
                 this.pos,
                 ConstantsValues.RANGE_MAX_A,
