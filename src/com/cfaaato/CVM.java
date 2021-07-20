@@ -29,25 +29,25 @@ public class CVM extends AbstractCVM {
                 Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
         );
         //#2
-        AbstractComponent.createComponent(
-                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
-        );
-        //#3
-        AbstractComponent.createComponent(
-                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
-        );
-        //#4
-        AbstractComponent.createComponent(
-                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
-        );
-        //#5
-        AbstractComponent.createComponent(
-                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
-        );
-        //#6
-        AbstractComponent.createComponent(
-                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
-        );
+//        AbstractComponent.createComponent(
+//                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+//        );
+//        //#3
+//        AbstractComponent.createComponent(
+//                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+//        );
+//        //#4
+//        AbstractComponent.createComponent(
+//                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+//        );
+//        //#5
+//        AbstractComponent.createComponent(
+//                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+//        );
+//        //#6
+//        AbstractComponent.createComponent(
+//                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+//        );
 
         super.deploy();
     }

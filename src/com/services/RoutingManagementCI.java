@@ -7,7 +7,7 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
 import java.util.Set;
 
 public interface RoutingManagementCI extends OfferedCI, RequiredCI{
-    public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes);
+    public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) throws Exception;
 
-    public void updateAccessPoint(P2PAddressI neighbour, int numberOfHops);
+    public void updateAccessPoint(P2PAddressI neighbour, int numberOfHops) throws Exception;
 }

@@ -2,10 +2,9 @@ package com.cfaaato;
 
 import com.connectors.CommunicationConnector;
 import com.connectors.RegistrationConnector;
+import com.connectors.RoutageConnector;
 import com.data.*;
-import com.port.ParticipantCommunicationOutboundPort;
-import com.port.ParticipantCommunicationInboundPort;
-import com.port.ParticipantRegistrationOutboundPort;
+import com.port.*;
 import com.services.*;
 import com.utils.ConstantsValues;
 import fr.sorbonne_u.components.AbstractComponent;
@@ -22,6 +21,8 @@ public class Participant extends AbstractComponent {
     protected ParticipantRegistrationOutboundPort prop;
     protected ParticipantCommunicationOutboundPort pcop;
     protected ParticipantCommunicationInboundPort pcip;
+    protected ParticipantRoutageOutboundPort prtop;
+    protected ParticipantRoutageInboundPort prtip;
     private ConnectionInfo myInformations;
     private Set<ConnectionInfo> neighbors;
     private HashMap<P2PAddressI, String> comAddressPortTable = new HashMap<P2PAddressI, String>();
@@ -33,12 +34,19 @@ public class Participant extends AbstractComponent {
         super(nbThreads, nbSchedulableThreads);
         this.neighbors = new HashSet<ConnectionInfo>();
         this.pos = pos;
-        //creation des ports
+        //creation des ports de communication
         this.pcip = new ParticipantCommunicationInboundPort(UUID.randomUUID().toString(),this);
         this.pcop = new ParticipantCommunicationOutboundPort(this);
-        //publication des ports
+        //publication des ports de communication
         this.pcip.publishPort();
         this.pcop.publishPort();
+
+        //creation des ports de routage
+        this.prtip = new ParticipantRoutageInboundPort(UUID.randomUUID().toString(),this);
+        this.prtop = new ParticipantRoutageOutboundPort(this);
+        //publication des ports de routage
+        this.prtip.publishPort();
+        this.prtop.publishPort();
     }
 
     public void registrateOnNetwork() throws Exception {
@@ -96,8 +104,6 @@ public class Participant extends AbstractComponent {
         }
     }
 
-
-
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
         if (!this.comAddressPortTable.containsKey(address)){
             this.comAddressPortTable.put(address, communicationInboundPortURI);
@@ -111,8 +117,28 @@ public class Participant extends AbstractComponent {
         if (!this.routingAddressPortTable.containsKey(address)){
             this.routingAddressPortTable.put(address, routingInboundPortURI);
         }
-        //routingtable en parametre doit etre celle du destinataire
-        this.myRoutingTable.updateRouting(address, this.myRoutingTable.getRoutes(address));
+
+        initialiseRoutesNeighbor(address,this.prtip.getPortURI(),this.myRoutingTable);
+    }
+
+    public void initialiseRoutesNeighbor(P2PAddressI address, String routageInboundPortURI, RoutingTable rt) throws Exception {
+
+        this.doPortConnection(
+                this.prtop.getPortURI(),
+                routageInboundPortURI,
+                RoutageConnector.class.getCanonicalName()
+        );
+        this.updateRouting(address, rt.getRoutes(address));
+        backUpdateConnectedNeighbor(address,this.prtop.getPortURI(),this.myRoutingTable);
+    }
+
+    public void backUpdateConnectedNeighbor(P2PAddressI address, String routageOutboundPortURI, RoutingTable rt) throws Exception {
+        this.doPortConnection(
+                routageOutboundPortURI,
+                this.prtip.getPortURI(),
+                RoutageConnector.class.getCanonicalName()
+        );
+        this.updateRouting(address, rt.getRoutes(address));
     }
 
     public void floodMessageTransit(Message m) throws Exception {
@@ -166,7 +192,13 @@ public class Participant extends AbstractComponent {
         }
     }
 
+    public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) throws Exception{
+        System.out.println("mon port est: " + this.prtop.getPortURI());
+    }
 
+    public void updateAccessPoint(P2PAddressI neighbour, int numberOfHops) throws Exception{
+
+    }
     //Les tables de routage vont être mise a jour
     public void updateNeighborsRoutingTable(){
         System.out.println(this.myRoutingTable);
