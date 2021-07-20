@@ -5,7 +5,6 @@ import com.port.SimulatorInboundPort;
 import com.utils.ConstantsValues;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,31 +17,43 @@ public class Simulator extends AbstractComponent {
     protected Simulator(int nbThreads, int nbSchedulableThreads) {
         super(nbThreads, nbSchedulableThreads);
         this.listDevicesInformation = new HashSet<ConnectionInfo>();
+        this.listAccessPointInformation = new HashSet<>();
     }
 
     public Set<ConnectionInfo> registerInternal(ConnectionInfo deviceInf) throws Exception{
         Set<ConnectionInfo> ret_Set = new HashSet<>(this.listDevicesInformation);
         Set<ConnectionInfo> filteredSet = new HashSet<>();
-        listDevicesInformation.add(deviceInf);
+        this.listDevicesInformation.add(deviceInf);
 
         for (ConnectionInfo coi : ret_Set){
             if (coi.getInitialPosition().distance(deviceInf.getInitialPosition()) < deviceInf.getInitialRange()){
                 filteredSet.add(coi);
             }
         }
+
+        for (ConnectionInfo lpi : this.listAccessPointInformation){
+            if (lpi.getInitialPosition().distance(deviceInf.getInitialPosition()) < deviceInf.getInitialRange()){
+                filteredSet.add(lpi);
+            }
+        }
+
         return filteredSet;
     }
 
     public Set<ConnectionInfo> registerAccessPoint(ConnectionInfo deviceInf) throws Exception {
-        Set<ConnectionInfo> ret_Set = new HashSet<>(this.listDevicesInformation);
+        Set<ConnectionInfo> ret_Set = new HashSet<>(this.listAccessPointInformation);
         Set<ConnectionInfo> filteredSet = new HashSet<>();
         listAccessPointInformation.add(deviceInf);
 
-        for (ConnectionInfo coi : ret_Set){
+        // Ajouter les participants du réseau P2P suffisament proche
+        for (ConnectionInfo coi : this.listDevicesInformation){
             if (coi.getInitialPosition().distance(deviceInf.getInitialPosition()) < deviceInf.getInitialRange()){
                 filteredSet.add(coi);
             }
         }
+
+        // Ajouter tous les accessPoints
+        filteredSet.addAll(ret_Set);
         return filteredSet;
     }
 
@@ -55,5 +66,12 @@ public class Simulator extends AbstractComponent {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void finalise() throws Exception {
+        System.out.println("Participants list :" + this.listDevicesInformation);
+        System.out.println("AP list : " + this.listAccessPointInformation);
+        this.sip.unpublishPort();
     }
 }

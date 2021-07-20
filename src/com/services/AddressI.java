@@ -1,8 +1,7 @@
 package com.services;
 
 public interface AddressI{
-
-    boolean isP2PAddress();
+        boolean isP2PAddress();
 
     boolean isIPAddress();
 

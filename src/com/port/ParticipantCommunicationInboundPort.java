@@ -1,5 +1,6 @@
 package com.port;
 
+import com.cfaaato.AccessPoint;
 import com.cfaaato.Participant;
 import com.cfaaato.Simulator;
 import com.services.CommunicationCI;
@@ -26,30 +27,58 @@ public class ParticipantCommunicationInboundPort extends AbstractOutboundPort im
 
     @Override
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
-        this.getOwner().handleRequest(
-                p -> {
-                    try {
-                        ((Participant) p).connect(address, communicationInboundPortURI, routingInboundPortURI);
+        if (this.getOwner() instanceof Participant){
+            this.getOwner().handleRequest(
+                    p -> {
+                        try {
+                            ((Participant) p).connect(address, communicationInboundPortURI, routingInboundPortURI);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                        return null;
+                    });
+        }
+        else if (this.getOwner() instanceof AccessPoint){
+            this.getOwner().handleRequest(
+                    p -> {
+                        try {
+                            ((AccessPoint) p).connect(address, communicationInboundPortURI, routingInboundPortURI);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                        return null;
+                    });
+        }
 
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    return null;
-                });
     }
 
     @Override
     public void routeMessage(MessageI m) throws Exception {
-        this.getOwner().handleRequest(
-                p -> {
-                    try {
-                        ((Participant) p).routeMessage(m);
+        if (this.getOwner() instanceof Participant){
+            this.getOwner().handleRequest(
+                    p -> {
+                        try {
+                            ((Participant) p).routeMessage(m);
 
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    return null;
-                });
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                        return null;
+                    });
+        }
+        else if (this.getOwner() instanceof AccessPoint){
+            this.getOwner().handleRequest(
+                    p -> {
+                        try {
+                            ((AccessPoint) p).routeMessage(m);
+
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                        return null;
+                    });
+        }
+
     }
     /*
     @Override

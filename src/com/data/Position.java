@@ -33,7 +33,7 @@ public class Position implements PositionI {
         if(other instanceof Position){
             Position autre = (Position) other;
             return Math.abs(Math.sqrt((autre.getX()-this.getX())*(autre.getX()-this.getX())
-                    -(autre.getY()-this.getY())*(autre.getY()-this.getY())));
+                    +(autre.getY()-this.getY())*(autre.getY()-this.getY())));
         }
         return Double.MAX_VALUE;
     }
