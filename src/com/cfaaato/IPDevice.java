@@ -29,6 +29,8 @@ public class IPDevice extends AbstractComponent {
 
         this.ipcip = new IPCommunicationInboundPort(serverPortURI, this);
         this.ipcop = new IPCommunicationOutboundPort(UUID.randomUUID().toString(), this);
+        this.ipcip.publishPort();
+        this.ipcop.publishPort();
     }
 
     public void routeMessage(MessageI m) throws Exception{
