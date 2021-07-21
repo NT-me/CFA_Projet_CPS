@@ -208,8 +208,8 @@ public class AccessPoint extends AbstractComponent {
     @Override
     public void finalise() throws Exception
     {
-        //System.out.println(this.comAdressPortTable);
-        /*System.out.println(this.neighbors);*/
+/*        System.out.println(this.comAdressPortTable);*/
+        System.out.println(this.neighbors);
         this.doPortDisconnection(this.proap.getPortURI());
         this.proap.unpublishPort();
 

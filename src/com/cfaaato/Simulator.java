@@ -70,7 +70,7 @@ public class Simulator extends AbstractComponent {
 
     @Override
     public void finalise() throws Exception {
-        System.out.println("Participants list :" + this.listDevicesInformation);
+        System.out.println("Participants list : " + this.listDevicesInformation);
         System.out.println("AP list : " + this.listAccessPointInformation);
         this.sip.unpublishPort();
     }

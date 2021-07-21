@@ -49,11 +49,13 @@ public class CVM extends AbstractCVM {
                 Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
         );*/
         //#7
-/*
         AbstractComponent.createComponent(
                 AccessPoint.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
         );
-*/
+
+        AbstractComponent.createComponent(
+                AccessPoint.class.getCanonicalName(), new Object[]{1,0, new Position(1000, rd.nextInt(5))}
+        );
 
 
         super.deploy();
