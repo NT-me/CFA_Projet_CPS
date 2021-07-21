@@ -59,7 +59,7 @@ public class Participant extends AbstractComponent {
                 this.pcip.getPortURI(),
                 this.pos,
                 ConstantsValues.RANGE_MAX_A,
-                "0");
+                this.prtip.getPortURI());
         this.myInformations = myInfo_init;
 
         //Iniitialisation de la liste de voisins directs
@@ -74,8 +74,8 @@ public class Participant extends AbstractComponent {
         //Pour chaque voisin reçu du simulateur, on rempli notre table de port et on initialise notre table de routage
         for (ConnectionInfo coi : this.neighbors){
             this.comAddressPortTable.put(coi.getAddress(), coi.getCommunicationInboundPortURI());
-            this.myRoutingTable.addNewNeighbor(coi.getAddress());
         }
+        this.myRoutingTable.addNeighbors(this.myInformations.getAddress(),this.neighbors);
     }
 
     public void newOnNetwork() throws Exception {
@@ -90,7 +90,7 @@ public class Participant extends AbstractComponent {
             this.pcop.connect(
                     this.myInformations.getAddress(),
                     this.pcip.getPortURI(),
-                    "");
+                    this.prtip.getPortURI());
 
             this.comAddressPortTable.put(
                     coi.getAddress(),
@@ -117,25 +117,25 @@ public class Participant extends AbstractComponent {
         if (!this.routingAddressPortTable.containsKey(address)){
             this.routingAddressPortTable.put(address, routingInboundPortURI);
         }
-
-        initialiseRoutesNeighbor(address,this.prtip.getPortURI(),this.myRoutingTable);
+        initialiseRoutesNeighbor(address,this.myRoutingTable);
     }
 
-    public void initialiseRoutesNeighbor(P2PAddressI address, String routageInboundPortURI, RoutingTable rt) throws Exception {
-
+    public void initialiseRoutesNeighbor(P2PAddressI address, RoutingTable rt) throws Exception {
+        String neighborInboundPortURI = this.routingAddressPortTable.get(address);
         this.doPortConnection(
                 this.prtop.getPortURI(),
-                routageInboundPortURI,
+                neighborInboundPortURI,
                 RoutageConnector.class.getCanonicalName()
         );
         this.updateRouting(address, rt.getRoutes(address));
-        backUpdateConnectedNeighbor(address,this.prtop.getPortURI(),this.myRoutingTable);
+        backUpdateConnectedNeighbor(address,this.myRoutingTable);
     }
 
-    public void backUpdateConnectedNeighbor(P2PAddressI address, String routageOutboundPortURI, RoutingTable rt) throws Exception {
+    public void backUpdateConnectedNeighbor(P2PAddressI address, RoutingTable rt) throws Exception {
+        String neighborInboundPortURI = this.routingAddressPortTable.get(address);
         this.doPortConnection(
-                routageOutboundPortURI,
-                this.prtip.getPortURI(),
+                this.prtop.getPortURI(),
+                neighborInboundPortURI,
                 RoutageConnector.class.getCanonicalName()
         );
         this.updateRouting(address, rt.getRoutes(address));
@@ -144,13 +144,13 @@ public class Participant extends AbstractComponent {
     public void floodMessageTransit(Message m) throws Exception {
         //if the message hit the receiver,
         if (m.getAddress().equals(this.myInformations.getAddress())){
-            System.out.println(
-                    this.myInformations.getAddress().toString()
-                            + " | Msg name : "
-                            + m.hashCode()
-                            + " | Msg content : "
-                            + m.getContent()
-            );
+//            System.out.println(
+//                    this.myInformations.getAddress().toString()
+//                            + " | Msg name : "
+//                            + m.hashCode()
+//                            + " | Msg content : "
+//                            + m.getContent()
+//            );
         }
         else {
             m.decrementHops();
@@ -165,13 +165,13 @@ public class Participant extends AbstractComponent {
                             item.getValue(),
                             CommunicationConnector.class.getCanonicalName()
                     );
-                    System.out.println(
-                            this.myInformations.getAddress().toString()
-                                    + " | Msg name : "
-                                    + m.hashCode()
-                                    + " | Msg send to : "
-                                    + m.getAddress()
-                    );
+//                    System.out.println(
+//                            this.myInformations.getAddress().toString()
+//                                    + " | Msg name : "
+//                                    + m.hashCode()
+//                                    + " | Msg send to : "
+//                                    + m.getAddress()
+//                    );
 
                     this.pcop.routeMessage(m);
                 }
@@ -193,7 +193,7 @@ public class Participant extends AbstractComponent {
     }
 
     public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) throws Exception{
-        System.out.println("mon port est: " + this.prtop.getPortURI());
+        //System.out.println("ma routingTablePort: " + this.routingAddressPortTable);
     }
 
     public void updateAccessPoint(P2PAddressI neighbour, int numberOfHops) throws Exception{
@@ -236,8 +236,19 @@ public class Participant extends AbstractComponent {
     public void finalise() throws Exception
     {
         //System.out.println(this.comAdressPortTable);
-
-
+        //System.out.println("mon adresse: " + this.);
+//        System.out.println("mon portInbound: " + this.prtip.getPortURI());
+//        System.out.println("ma routingTablePort: " + this.routingAddressPortTable);
+        HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
+        for (Map.Entry<P2PAddressI,Set<RouteInfo>> table: map.entrySet()) {
+            System.out.println("mes routes: " + this.myRoutingTable.getRoutes(table.getKey()));
+            Set<RouteInfo> routeInfo = table.getValue();
+            Iterator<RouteInfo> iterator = routeInfo.iterator();
+            while(iterator.hasNext()) {//Looping throught the collection
+                RouteInfo actual = iterator.next();
+                System.out.println("mon adresse: " + this.myInformations.getAddress() + "mes voisins: " + table.getKey() + " ma destination " + actual.getDestination() + "");
+            }
+        }
 
 
         this.doPortDisconnection(this.prop.getPortURI());

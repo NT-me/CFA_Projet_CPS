@@ -5,14 +5,16 @@ import com.data.RouteInfo;
 import com.services.P2PAddressI;
 import com.services.RoutingManagementCI;
 import fr.sorbonne_u.components.ComponentI;
+import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
-import fr.sorbonne_u.components.ports.AbstractOutboundPort;
+import fr.sorbonne_u.components.ports.AbstractInboundPort;
+
 
 import java.util.Set;
 
-public class ParticipantRoutageInboundPort extends AbstractOutboundPort implements RoutingManagementCI {
+public class ParticipantRoutageInboundPort extends AbstractInboundPort implements RoutingManagementCI {
 
-    public ParticipantRoutageInboundPort(String uri, Class<? extends RequiredCI> implementedInterface, ComponentI owner) throws Exception {
+    public ParticipantRoutageInboundPort(String uri, Class<? extends OfferedCI> implementedInterface, ComponentI owner) throws Exception {
         super(uri, implementedInterface, owner);
     }
 
@@ -20,7 +22,7 @@ public class ParticipantRoutageInboundPort extends AbstractOutboundPort implemen
         super(uri, RoutingManagementCI.class, owner);
     }
 
-    public ParticipantRoutageInboundPort(Class<? extends RequiredCI> implementedInterface, ComponentI owner) throws Exception {
+    public ParticipantRoutageInboundPort(Class<? extends OfferedCI> implementedInterface, ComponentI owner) throws Exception {
         super(implementedInterface, owner);
     }
 

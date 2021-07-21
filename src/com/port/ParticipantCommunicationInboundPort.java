@@ -6,11 +6,13 @@ import com.services.CommunicationCI;
 import com.services.MessageI;
 import com.services.P2PAddressI;
 import fr.sorbonne_u.components.ComponentI;
+import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
+import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
-public class ParticipantCommunicationInboundPort extends AbstractOutboundPort implements CommunicationCI {
-    public ParticipantCommunicationInboundPort(String uri, Class<? extends RequiredCI> implementedInterface, ComponentI owner) throws Exception {
+public class ParticipantCommunicationInboundPort extends AbstractInboundPort implements CommunicationCI {
+    public ParticipantCommunicationInboundPort(String uri, Class<? extends OfferedCI> implementedInterface, ComponentI owner) throws Exception {
         super(uri, implementedInterface, owner);
     }
 
@@ -18,7 +20,7 @@ public class ParticipantCommunicationInboundPort extends AbstractOutboundPort im
         super(uri, CommunicationCI.class, owner);
     }
 
-    public ParticipantCommunicationInboundPort(Class<? extends RequiredCI> implementedInterface, ComponentI owner) throws Exception {
+    public ParticipantCommunicationInboundPort(Class<? extends OfferedCI> implementedInterface, ComponentI owner) throws Exception {
         super(implementedInterface, owner);
     }
 
