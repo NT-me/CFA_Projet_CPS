@@ -37,4 +37,9 @@ public class Position implements PositionI {
         }
         return Double.MAX_VALUE;
     }
+
+    @Override
+    public String toString(){
+        return ("[x: "+this.x+", y: "+this.y+"]");
+    }
 }

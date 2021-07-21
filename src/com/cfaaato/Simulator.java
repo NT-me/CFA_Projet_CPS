@@ -53,7 +53,10 @@ public class Simulator extends AbstractComponent {
         }
 
         // Ajouter tous les accessPoints
-        filteredSet.addAll(ret_Set);
+        for (ConnectionInfo coiAP : ret_Set){
+            filteredSet.add(coiAP);
+        }
+
         return filteredSet;
     }
 

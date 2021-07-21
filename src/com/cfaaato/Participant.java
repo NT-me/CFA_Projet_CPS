@@ -209,7 +209,7 @@ public class Participant extends AbstractComponent {
     public void finalise() throws Exception
     {
         //System.out.println(this.comAdressPortTable);
-        System.out.println("Voisins de "+ this + " : "+this.neighbors);
+        System.out.println("Voisins de "+ this.getClass().getName() + " " +this.myInformations.getAddress() + " : "+this.comAddressPortTable);
         this.doPortDisconnection(this.prop.getPortURI());
         this.prop.unpublishPort();
 

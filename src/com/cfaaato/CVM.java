@@ -4,6 +4,7 @@ import com.data.Position;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import java.util.Random;
+import java.util.UUID;
 
 public class CVM extends AbstractCVM {
 
@@ -49,14 +50,22 @@ public class CVM extends AbstractCVM {
                 Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
         );*/
         //#7
+
+        String AP1 = UUID.randomUUID().toString();
+        String AP2 = UUID.randomUUID().toString();
         AbstractComponent.createComponent(
-                AccessPoint.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+                AccessPoint.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5)), AP1}
         );
 
         AbstractComponent.createComponent(
-                AccessPoint.class.getCanonicalName(), new Object[]{1,0, new Position(1000, rd.nextInt(5))}
+                AccessPoint.class.getCanonicalName(), new Object[]{1,0, new Position(1000, rd.nextInt(5)), AP2}
         );
-
+        AbstractComponent.createComponent(
+                IPDevice.class.getCanonicalName(), new Object[]{1,0, AP1}
+        );
+        AbstractComponent.createComponent(
+                IPDevice.class.getCanonicalName(), new Object[]{1,0, AP2}
+        );
 
         super.deploy();
     }

@@ -3,6 +3,7 @@ package com.cfaaato;
 import com.connectors.CommunicationConnector;
 import com.connectors.RegistrationConnector;
 import com.data.*;
+import com.port.IPCommunicationOutboundPort;
 import com.port.ParticipantCommunicationInboundPort;
 import com.port.ParticipantCommunicationOutboundPort;
 import com.port.ParticipantRegistrationOutboundPort;
@@ -21,6 +22,7 @@ public class AccessPoint extends AbstractComponent {
     protected ParticipantRegistrationOutboundPort proap;
     protected ParticipantCommunicationOutboundPort pcoap;
     protected ParticipantCommunicationInboundPort pciap;
+    protected IPCommunicationOutboundPort ipcop;
     private IPAddress adressIP;
     private P2PAddress adressP2P;
     private Set<ConnectionInfo> neighbors;
@@ -30,7 +32,7 @@ public class AccessPoint extends AbstractComponent {
     private RoutingTable myRoutingTable = new RoutingTable();
     private HashMap<IPAddressI, String> IPRoutingTable;
 
-    protected AccessPoint(int nbThreads, int nbSchedulableThreads, Position pos) throws Exception {
+    protected AccessPoint(int nbThreads, int nbSchedulableThreads, Position pos, String ipcopURI) throws Exception {
         super(nbThreads, nbSchedulableThreads);
 
         this.neighbors = new HashSet<ConnectionInfo>();
@@ -38,14 +40,18 @@ public class AccessPoint extends AbstractComponent {
         //creation des ports
         this.pciap = new ParticipantCommunicationInboundPort(UUID.randomUUID().toString(),this);
         this.pcoap = new ParticipantCommunicationOutboundPort(this);
+        this.ipcop = new IPCommunicationOutboundPort(ipcopURI, this);
         //publication des ports
         this.pciap.publishPort();
         this.pcoap.publishPort();
+        this.ipcop.publishPort();
 
         this.adressP2P = new P2PAddress();
         this.adressIP = new IPAddress();
 
         this.IPRoutingTable = new HashMap<>();
+
+
     }
 
     public void registrateOnNetwork() throws Exception {
@@ -121,10 +127,10 @@ public class AccessPoint extends AbstractComponent {
 
 
     public void floodMessageTransit(Message m) throws Exception {
-/*        //if the message hit the receiver,
-        if (m.getAddress().equals(this.adress)){
+        //if the message hit the receiver,
+        if (m.getAddress().equals(this.adressP2P) || m.getAddress().equals(this.adressIP)){
             System.out.println(
-                    this.adress.toString()
+                    this.adressP2P.toString()
                             + " | Msg name : "
                             + m.hashCode()
                             + " | Msg content : "
@@ -134,37 +140,54 @@ public class AccessPoint extends AbstractComponent {
         else {
             m.decrementHops();
             if (m.stillAlive()){
-                // Iterating HashMap through for loop
-                for (Map.Entry<P2PAddressI, String> item : this.comAddressPortTable.entrySet()) {
-                    if(pcoap.connected()){
-                        pcoap.doDisconnection();
+                if (m.getAddress() instanceof P2PAddress || !this.IPRoutingTable.containsKey(m.getAddress())){
+                    // Iterating HashMap through for loop
+                    for (Map.Entry<P2PAddressI, String> item : this.comAddressPortTable.entrySet()) {
+                        if(pcoap.connected()){
+                            pcoap.doDisconnection();
+                        }
+                        this.doPortConnection(
+                                this.pcoap.getPortURI(),
+                                item.getValue(),
+                                CommunicationConnector.class.getCanonicalName()
+                        );
+                        System.out.println(
+                                this.adressP2P.toString()
+                                        + " | Msg name : "
+                                        + m.hashCode()
+                                        + " | Msg send to : "
+                                        + m.getAddress()
+                        );
+                        this.pcoap.routeMessage(m);
                     }
+                }
+                else if (m.getAddress() instanceof IPAddress){
                     this.doPortConnection(
-                            this.pcoap.getPortURI(),
-                            item.getValue(),
+                            this.ipcop.getPortURI(),
+                            this.comAddressPortTable.get(m.getAddress()),
                             CommunicationConnector.class.getCanonicalName()
                     );
-                    System.out.println(
-                            this.adress.toString()
-                                    + " | Msg name : "
-                                    + m.hashCode()
-                                    + " | Msg send to : "
-                                    + m.getAddress()
-                    );
-                    this.pcoap.routeMessage(m);
+                    ipcop.routeMessage(m);
                 }
+
                 pcoap.doDisconnection();
             }
             else{
                 System.out.println("Msg died");
             }
-        }*/
+        }
     }
 
     public void routeMessage(MessageI m) throws Exception {
         if (m instanceof MessageI){
             Message msg = (Message) m;
             floodMessageTransit(msg);
+        }
+    }
+
+    public void connectToServer(IPAddressI address, String communicationPortURI){
+        if (!this.IPRoutingTable.containsKey(address)){
+            this.IPRoutingTable.put(address, communicationPortURI);
         }
     }
 
@@ -209,7 +232,7 @@ public class AccessPoint extends AbstractComponent {
     public void finalise() throws Exception
     {
 /*        System.out.println(this.comAdressPortTable);*/
-        System.out.println(this.neighbors);
+        System.out.println("Voisins de "+ this.getClass().getName() + " " +this.adressP2P + " : "+this.comAddressPortTable);
         this.doPortDisconnection(this.proap.getPortURI());
         this.proap.unpublishPort();
 

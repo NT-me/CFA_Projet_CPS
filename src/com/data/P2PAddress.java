@@ -12,7 +12,7 @@ public class P2PAddress implements P2PAddressI {
 
     private String fakeAdresse(){
         Random r = new Random();
-        return hashCode() + "-" + r.nextInt(256) + "" + r.nextInt(256) + ":" + r.nextInt(256) + "" + r.nextInt(256) + ":" + r.nextInt(256) + "" + r.nextInt(256);
+        return hashCode() + "-" + r.nextInt(256) + ":" + r.nextInt(256);
     }
 
 /*    public P2PAddress(boolean isP2PAddress, boolean isIPAddress) {
