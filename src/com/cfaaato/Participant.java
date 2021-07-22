@@ -38,25 +38,37 @@ public class Participant extends AbstractComponent {
     private Position pos;
     private Logger myLogger;
 
+    private String pool_1_URI = UUID.randomUUID().toString();
+
     protected Participant(int nbThreads, int nbSchedulableThreads, Position pos) throws Exception {
         super(nbThreads, nbSchedulableThreads);
         this.neighbors = new HashSet<>();
         this.pos = pos;
+
+        // Création des pools de thread
+        this.createNewExecutorService(this.pool_1_URI,3,false);
+        System.out.println(getExecutorServiceIndex(this.pool_1_URI));
+
         //creation des ports de communication
-        this.pcip = new ParticipantCommunicationInboundPort(UUID.randomUUID().toString(),this);
+        this.pcip = new ParticipantCommunicationInboundPort(UUID.randomUUID().toString(),this, this.pool_1_URI);
         this.pcop = new ParticipantCommunicationOutboundPort(this);
+
         //publication des ports de communication
         this.pcip.publishPort();
         this.pcop.publishPort();
+
         //creation des ports de routage
         this.prtip = new ParticipantRoutageInboundPort(UUID.randomUUID().toString(),this);
         this.prtop = new ParticipantRoutageOutboundPort(this);
+
         //publication des ports de routage
         this.prtip.publishPort();
         this.prtop.publishPort();
 
         myLogger = new Logger(Integer.toString(this.hashCode()));
         this.setLogger(myLogger);
+
+
     }
 
     public void registrateOnNetwork() throws Exception {

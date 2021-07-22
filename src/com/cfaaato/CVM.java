@@ -34,11 +34,6 @@ public class CVM extends AbstractCVM {
               AbstractComponent.createComponent(Participant.class.getCanonicalName(),
                         new Object[] { 3, 0, new Position(1, 6) });
 
-/*
-        //#3
-        AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                        new Object[] { 3, 0, new Position(1, 1) });*/
-
         super.deploy();
         }
 
@@ -47,7 +42,7 @@ public class CVM extends AbstractCVM {
                         // fr.sorbonne_u.components.examples.basic_cs.CVM cvm = new
                         // fr.sorbonne_u.components.examples.basic_cs.CVM();
                         CVM cvm = new CVM();
-                        cvm.startStandardLifeCycle(10000L);
+                        cvm.startStandardLifeCycle(20000L);
                         // Thread.sleep(2000L);
                         System.exit(0);
                 } catch (Exception e) {
