@@ -1,29 +1,17 @@
 package com.port;
 
-import com.cfaaato.Participant;
-import com.data.RouteInfo;
-import com.services.P2PAddressI;
-import com.services.RoutingManagementCI;
-import fr.sorbonne_u.components.ComponentI;
-import fr.sorbonne_u.components.interfaces.OfferedCI;
-import fr.sorbonne_u.components.interfaces.RequiredCI;
-import fr.sorbonne_u.components.ports.AbstractInboundPort;
+import com.cfaaato.*;
+import com.data.*;
+import com.services.*;
+import fr.sorbonne_u.components.*;
+import fr.sorbonne_u.components.ports.*;
 
+import java.util.*;
 
-import java.util.Set;
-
-public class ParticipantRoutageInboundPort extends AbstractInboundPort implements RoutingManagementCI {
-
-    public ParticipantRoutageInboundPort(String uri, Class<? extends OfferedCI> implementedInterface, ComponentI owner) throws Exception {
-        super(uri, implementedInterface, owner);
-    }
+public class ParticipantRoutageInboundPort extends AbstractOutboundPort implements RoutingManagementCI {
 
     public ParticipantRoutageInboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, RoutingManagementCI.class, owner);
-    }
-
-    public ParticipantRoutageInboundPort(Class<? extends OfferedCI> implementedInterface, ComponentI owner) throws Exception {
-        super(implementedInterface, owner);
     }
 
     @Override
@@ -32,7 +20,6 @@ public class ParticipantRoutageInboundPort extends AbstractInboundPort implement
                 p -> {
                     try {
                         ((Participant) p).updateRouting(neighbour, routes);
-
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -53,4 +40,3 @@ public class ParticipantRoutageInboundPort extends AbstractInboundPort implement
                     return null;
                 });
     }
-}

@@ -1,26 +1,14 @@
 package com.port;
 
-import com.cfaaato.Participant;
-import com.data.RouteInfo;
-import com.services.P2PAddressI;
-import com.services.RoutingManagementCI;
-import fr.sorbonne_u.components.ComponentI;
-import fr.sorbonne_u.components.interfaces.RequiredCI;
-import fr.sorbonne_u.components.ports.AbstractOutboundPort;
+import com.cfaaato.*;
+import com.data.*;
+import com.services.*;
+import fr.sorbonne_u.components.*;
+import fr.sorbonne_u.components.ports.*;
 
-import java.util.Set;
+import java.util.*;
 
 public class ParticipantRoutageOutboundPort extends AbstractOutboundPort implements RoutingManagementCI {
-
-
-    public ParticipantRoutageOutboundPort(String uri, Class<? extends RequiredCI> implementedInterface, ComponentI owner) throws Exception {
-        super(uri, implementedInterface, owner);
-    }
-
-    public ParticipantRoutageOutboundPort(Class<? extends RequiredCI> implementedInterface, ComponentI owner) throws Exception {
-        super(implementedInterface, owner);
-    }
-
     public ParticipantRoutageOutboundPort(ComponentI owner) throws Exception {
         super(RoutingManagementCI.class, owner);
     }
@@ -53,5 +41,4 @@ public class ParticipantRoutageOutboundPort extends AbstractOutboundPort impleme
                     return null;
                 });
     }
-
 }

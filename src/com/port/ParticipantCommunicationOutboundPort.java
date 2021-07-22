@@ -4,7 +4,6 @@ import com.services.CommunicationCI;
 import com.services.MessageI;
 import com.services.P2PAddressI;
 import fr.sorbonne_u.components.ComponentI;
-import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
 public class ParticipantCommunicationOutboundPort extends AbstractOutboundPort implements CommunicationCI{
