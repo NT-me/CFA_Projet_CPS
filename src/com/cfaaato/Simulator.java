@@ -17,7 +17,16 @@ public class Simulator extends AbstractComponent {
     protected Simulator(int nbThreads, int nbSchedulableThreads) {
         super(nbThreads, nbSchedulableThreads);
         this.listDevicesInformation = new HashSet<ConnectionInfo>();
+        try {
+            this.sip = new SimulatorInboundPort(ConstantsValues.URI_REGISTRATION_SIMULATOR_PORT,this);
+            this.sip.publishPort();
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         this.listAccessPointInformation = new HashSet<>();
+
     }
 
     public Set<ConnectionInfo> registerInternal(ConnectionInfo deviceInf) throws Exception{
@@ -64,8 +73,8 @@ public class Simulator extends AbstractComponent {
     public void start() throws ComponentStartException {
         super.start();
         try {
-            this.sip = new SimulatorInboundPort(ConstantsValues.URI_REGISTRATION_SIMULATOR_PORT,this);
-            this.sip.publishPort();
+            // this.sip = new SimulatorInboundPort(ConstantsValues.URI_REGISTRATION_SIMULATOR_PORT,this);
+            // this.sip.publishPort();
         } catch (Exception e) {
             e.printStackTrace();
         }

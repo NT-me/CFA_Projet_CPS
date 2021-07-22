@@ -1,11 +1,8 @@
 package com.port;
-
-import com.cfaaato.AccessPoint;
-import com.cfaaato.Participant;
-import com.cfaaato.Simulator;
-import com.services.CommunicationCI;
-import com.services.MessageI;
-import com.services.P2PAddressI;
+import com.cfaaato.*;
+import com.services.*;
+import fr.sorbonne_u.components.*;
+import fr.sorbonne_u.components.ports.*;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
@@ -15,9 +12,6 @@ public class ParticipantCommunicationInboundPort extends AbstractInboundPort imp
     public ParticipantCommunicationInboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, CommunicationCI.class, owner);
     }
-
-
-
 
     @Override
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
@@ -43,7 +37,6 @@ public class ParticipantCommunicationInboundPort extends AbstractInboundPort imp
                         return null;
                     });
         }
-
     }
 
     @Override
