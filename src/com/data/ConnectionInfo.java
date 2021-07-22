@@ -6,20 +6,20 @@ import com.services.PositionI;
 public class ConnectionInfo {
 
     private P2PAddressI address;
-    private String communicationUnboudPortUri;
+    private String communicationInboudPortUri;
     private PositionI initialPosition;
     private double initialRange;
     private String routingInboundPortUri;
 
     public ConnectionInfo(P2PAddressI address,
-                          String communicationUnboudPortUri,
+                          String communicationInboudPortUri,
                           PositionI initialPosition,
                           double initialRange,
                           String routingInboundPortUri) {
         if(address instanceof P2PAddress){
             this.address = address;
         }
-        this.communicationUnboudPortUri = communicationUnboudPortUri;
+        this.communicationInboudPortUri = communicationInboudPortUri;
         if (initialPosition instanceof Position){
             this.initialPosition = initialPosition;
         }
@@ -32,7 +32,7 @@ public class ConnectionInfo {
     }
 
     public String getCommunicationInboundPortURI(){
-        return this.communicationUnboudPortUri;
+        return this.communicationInboudPortUri;
     }
 
     public PositionI getInitialPosition() {
@@ -46,6 +46,4 @@ public class ConnectionInfo {
     public String getRoutingInboundPortURI(){
         return this.routingInboundPortUri;
     }
-
-
 }

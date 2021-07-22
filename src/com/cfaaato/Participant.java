@@ -16,30 +16,37 @@ import java.util.*;
 @OfferedInterfaces(offered = {CommunicationCI.class})
 public class Participant extends AbstractComponent {
 
+    //Ports declaration
     protected ParticipantRegistrationOutboundPort prop;
     protected ParticipantCommunicationOutboundPort pcop;
     protected ParticipantCommunicationInboundPort pcip;
-    protected ParticipantRoutageOutboundPort prtop;
     protected ParticipantRoutageInboundPort prtip;
+    protected ParticipantRoutageOutboundPort prtop;
+
+    //Cnnectors informations
+    RoutageConnector routageConnector;
+
+    //Connections Informations of this element
     private ConnectionInfo myInformations;
     private Set<ConnectionInfo> neighbors;
-    private HashMap<P2PAddressI, String> comAddressPortTable = new HashMap<P2PAddressI, String>();
-    private HashMap<P2PAddressI, String> routingAddressPortTable = new HashMap<P2PAddressI, String>();
+    //
+    private HashMap<P2PAddressI, String> comAddressPortTable = new HashMap<>();
+    private HashMap<P2PAddressI, String> routingAddressPortTable = new HashMap<>();
     private RoutingTable myRoutingTable = new RoutingTable();
     private Position pos;
     private Logger myLogger;
 
     protected Participant(int nbThreads, int nbSchedulableThreads, Position pos) throws Exception {
         super(nbThreads, nbSchedulableThreads);
-        this.neighbors = new HashSet<ConnectionInfo>();
+        this.neighbors = new HashSet<>();
         this.pos = pos;
+
         //creation des ports de communication
         this.pcip = new ParticipantCommunicationInboundPort(UUID.randomUUID().toString(),this);
         this.pcop = new ParticipantCommunicationOutboundPort(this);
         //publication des ports de communication
         this.pcip.publishPort();
         this.pcop.publishPort();
-
         //creation des ports de routage
         this.prtip = new ParticipantRoutageInboundPort(UUID.randomUUID().toString(),this);
         this.prtop = new ParticipantRoutageOutboundPort(this);
@@ -59,12 +66,11 @@ public class Participant extends AbstractComponent {
         this.doPortConnection(this.prop.getPortURI(), ConstantsValues.URI_REGISTRATION_SIMULATOR_PORT, RegistrationConnector.class.getCanonicalName());
 
         P2PAddress P2PAddress_init = new P2PAddress();
-        ConnectionInfo myInfo_init = new ConnectionInfo(P2PAddress_init,
+        this.myInformations = new ConnectionInfo(P2PAddress_init,
                 this.pcip.getPortURI(),
                 this.pos,
                 ConstantsValues.RANGE_MAX_A,
-                "0");
-        this.myInformations = myInfo_init;
+                this.prtip.getPortURI());
 
         //Iniitialisation de la liste de voisins directs
         this.neighbors = this.prop.registerInternal(
@@ -101,7 +107,7 @@ public class Participant extends AbstractComponent {
             this.pcop.connect(
                     this.myInformations.getAddress(),
                     this.pcip.getPortURI(),
-                    "");
+                    this.prtip.getPortURI());
 
 
             // this.comAddressPortTable.put(
@@ -121,13 +127,8 @@ public class Participant extends AbstractComponent {
     }
 
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
-
-
         if (!this.comAddressPortTable.containsKey(address)){
-
             this.logMessage("connect called from :"+ address);
-
-
             this.comAddressPortTable.put(address, communicationInboundPortURI);
 
 
@@ -191,6 +192,58 @@ public class Participant extends AbstractComponent {
                 this.logMessage("Msg died");
             }
         }
+    }
+
+    /*this method should parse all address contained inside the table attribut
+     */
+    public void routeByTable(Message m) throws Exception {
+        if(this.myInformations.getAddress().equals(m.getAddress())){
+            //TODO call the logger to log the packet details just below
+            System.out.println(
+                    this.myInformations.getAddress().toString()
+                            + " | Msg name : "
+                            + m.hashCode()
+                            + " | Msg send to : "
+                            + m.getAddress()
+            );
+            System.out.println("Message arrived to destination");
+        }
+        if(this.myRoutingTable.getTable().isEmpty()){
+            //TODO invoke the logger here
+            System.out.println("C'est flooooodé");
+            return;
+        }
+        m.decrementHops();
+        int nbrHops = Integer.MAX_VALUE;
+        //if the receiver is present on the neighbors table
+        if(m.stillAlive() && this.myRoutingTable.getTable().keySet().contains(m.getAddress())){
+            this.doPortConnection(this.pcop.getPortURI(),this.comAddressPortTable.get(m.getAddress())
+                    ,CommunicationConnector.class.getCanonicalName());
+            this.pcop.routeMessage(m);
+        }
+        //Parsing the
+        AddressI next = null;
+        HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
+        for (Map.Entry<P2PAddressI,Set<RouteInfo>> table: map.entrySet()) {
+            Set<RouteInfo> routeInfo = table.getValue();
+            Iterator<RouteInfo> iterator = routeInfo.iterator();
+            while(iterator.hasNext()){//Looping throught the collection
+                RouteInfo actual = iterator.next();
+                if(actual.getDestination().equals(m.getAddress())
+                        && actual.getNumberOfHops() < nbrHops){
+                    nbrHops = actual.getNumberOfHops();
+                    next = table.getKey();
+                }
+            }
+        }
+        //If the value has not been updated, aka the aimed node is not known
+        if(nbrHops == Integer.MAX_VALUE){
+            //floodMessageTransit(m);
+            return;
+        }
+        this.doPortConnection(this.pcop.getPortURI(),this.comAddressPortTable.get(next)
+                ,CommunicationConnector.class.getCanonicalName());
+        this.pcop.routeMessage(m);
     }
 
     public void routeMessage(MessageI m) throws Exception {
