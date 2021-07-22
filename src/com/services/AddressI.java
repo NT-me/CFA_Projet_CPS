@@ -1,7 +1,6 @@
 package com.services;
 
 public interface AddressI{
-
     /**
      * Description : Ensure that the calling element is a P2PAddress
      * @return true if it's a P2PAddress, otherwise returns false

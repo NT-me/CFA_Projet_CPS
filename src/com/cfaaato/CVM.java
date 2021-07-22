@@ -4,6 +4,7 @@ import com.data.Position;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import java.util.Random;
+import java.util.UUID;
 
 public class CVM extends AbstractCVM {
 
@@ -20,28 +21,63 @@ public class CVM extends AbstractCVM {
                 Simulator.class.getCanonicalName(), new Object[]{1,0}
         );
 
-                // Adding P2P elements inside the simulator
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
-                // #1
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
-                // #2
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
+        //Adding P2P elements inside the simulator
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+        //#1
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+        //#2
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+/*        //#3
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+        //#4
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+        //#5
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );
+        //#6
+        AbstractComponent.createComponent(
+                Participant.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5))}
+        );*/
+        //#7
 
-                //#3
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
+        String AP1 = UUID.randomUUID().toString();
+        String AP2 = UUID.randomUUID().toString();
+        AbstractComponent.createComponent(
+                AccessPoint.class.getCanonicalName(), new Object[]{1,0, new Position(rd.nextInt(5), rd.nextInt(5)), AP1}
+        );
 
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
+        AbstractComponent.createComponent(
+                AccessPoint.class.getCanonicalName(), new Object[]{1,0, new Position(1000, rd.nextInt(5)), AP2}
+        );
+/*        AbstractComponent.createComponent(
+                IPDevice.class.getCanonicalName(), new Object[]{1,0, AP1}
+        );
+        AbstractComponent.createComponent(
+                IPDevice.class.getCanonicalName(), new Object[]{1,0, AP2}
+        );*/
 
-                //#3
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
-
-                super.deploy();
+        super.deploy();
+    }
+    public static void main(String[] args) {
+	    try {
+	        //fr.sorbonne_u.components.examples.basic_cs.CVM cvm = new fr.sorbonne_u.components.examples.basic_cs.CVM();
+	        CVM cvm = new CVM();
+            cvm.startStandardLifeCycle(1000L);
+	        Thread.sleep(2000L);
+	        System.exit(0);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         public static void main(String[] args) {
