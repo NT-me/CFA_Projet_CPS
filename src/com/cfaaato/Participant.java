@@ -40,7 +40,6 @@ public class Participant extends AbstractComponent {
         super(nbThreads, nbSchedulableThreads);
         this.neighbors = new HashSet<>();
         this.pos = pos;
-
         //creation des ports de communication
         this.pcip = new ParticipantCommunicationInboundPort(UUID.randomUUID().toString(),this);
         this.pcop = new ParticipantCommunicationOutboundPort(this);
@@ -69,7 +68,6 @@ public class Participant extends AbstractComponent {
                 this.pos,
                 ConstantsValues.RANGE_MAX_A,
                 this.prtip.getPortURI());
-
         //Iniitialisation de la liste de voisins directs
         this.neighbors = this.prop.registerInternal(
                 this.myInformations.getAddress(),
@@ -82,7 +80,6 @@ public class Participant extends AbstractComponent {
         //Pour chaque voisin reçu du simulateur, on rempli notre table de port et on initialise notre table de routage
         for (ConnectionInfo coi : this.neighbors){
             this.comAddressPortTable.put(coi.getAddress(), coi.getCommunicationInboundPortURI());
-            this.myRoutingTable.addNewNeighbor(coi.getAddress());
         }
     }
 
@@ -153,13 +150,6 @@ public class Participant extends AbstractComponent {
     public void floodMessageTransit(Message m) throws Exception {
         //if the message hit the receiver,
         if (m.getAddress().equals(this.myInformations.getAddress())){
-                myLogger.logMessage(
-                     this.myInformations.getAddress().toString()
-                             + " | Msg name : "
-                             + m
-                             + " | Msg content : "
-                             + m.getContent()
-             );
         }
         else {
             m.decrementHops();
@@ -174,13 +164,7 @@ public class Participant extends AbstractComponent {
                             item.getValue(),
                             CommunicationConnector.class.getCanonicalName()
                     );
-                    // System.out.println(
-                    //         this.myInformations.getAddress().toString()
-                    //                 + " | Msg name : "
-                    //                 + m
-                    //                 + " | Msg send to : "
-                    //                 + m.getAddress()
-                    // );
+
 
                     this.pcop.routeMessage(m);
                 }
@@ -247,10 +231,33 @@ public class Participant extends AbstractComponent {
         }
     }
 
+    public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) throws Exception{
+        HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
+        Set<P2PAddressI> allNeighbor = new HashSet<>();
+        for (Map.Entry<P2PAddressI,Set<RouteInfo>> table: map.entrySet()) {
+            allNeighbor.add(table.getKey());
+        }
+        //System.out.println("mon adresse: " + this.myInformations.getAddress() + " neighbor " +map);
+    }
 
+    public void updateAccessPoint(P2PAddressI neighbour, int numberOfHops) throws Exception{
+
+    }
     //Les tables de routage vont être mise a jour
-    public void updateNeighborsRoutingTable(){
-        // System.out.println(this.myRoutingTable);
+
+    public void updateNeighborsRoutingTable() throws Exception {
+        HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
+        System.out.println("bonjour mon adresse: " + this.myInformations.getAddress());
+        for (Map.Entry<P2PAddressI,Set<RouteInfo>> table: map.entrySet()) {
+            System.out.println("mon adresse: " + this.myInformations.getAddress());
+            Set<RouteInfo> routeInfo = table.getValue();
+            this.doPortConnection(
+                    this.prtop.getPortURI(),
+                    this.routingAddressPortTable.get(table.getKey()),
+                    RoutageConnector.class.getCanonicalName()
+            );
+            this.prtop.updateRouting(table.getKey(),routeInfo);
+        }
     }
 
     @Override
@@ -280,14 +287,13 @@ public class Participant extends AbstractComponent {
         try {
             registrateOnNetwork();
             newOnNetwork();
-            updateNeighborsRoutingTable();
-            // System.out.println("nb voisins :"+ this.comAddressPortTable.size());
             if (this.comAddressPortTable.keySet().toArray().length > 0){
                 Object randomName = this.comAddressPortTable.keySet().toArray()[new Random().nextInt(this.comAddressPortTable.keySet().toArray().length)];
                 Message msg = new Message((AddressI) randomName);
                 routeMessage(msg);
             }
-            // System.out.println(this.neighbors);
+            updateNeighborsRoutingTable();
+          
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -298,6 +304,21 @@ public class Participant extends AbstractComponent {
     {
         this.logMessage(" nb comAddressPortTable : "+this.comAddressPortTable.size() +"\n"+this.comAddressPortTable );
         this.printExecutionLog();
+        //System.out.println(this.comAdressPortTable);
+        //System.out.println("mon adresse: " + this.);
+//        System.out.println("mon portInbound: " + this.prtip.getPortURI());
+//        System.out.println("ma routingTablePort: " + this.routingAddressPortTable);
+        HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
+        System.out.println(map);
+        for (Map.Entry<P2PAddressI,Set<RouteInfo>> table: map.entrySet()) {
+            //System.out.println("mes routes: " + this.myRoutingTable.getRoutes(table.getKey()));
+            Set<RouteInfo> routeInfo = table.getValue();
+            Iterator<RouteInfo> iterator = routeInfo.iterator();
+            while(iterator.hasNext()) {//Looping throught the collection
+                RouteInfo actual = iterator.next();
+                //System.out.println("mon adresse: " + this.myInformations.getAddress() + "mes voisins: " + table.getKey() + " ma destination " + actual.getDestination() + "");
+            }
+        }
 
 
         this.doPortDisconnection(this.prop.getPortURI());

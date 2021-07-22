@@ -40,4 +40,3 @@ public class ParticipantRoutageInboundPort extends AbstractOutboundPort implemen
                     return null;
                 });
     }
-}

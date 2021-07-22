@@ -9,7 +9,6 @@ import fr.sorbonne_u.components.ports.*;
 import java.util.*;
 
 public class ParticipantRoutageOutboundPort extends AbstractOutboundPort implements RoutingManagementCI {
-
     public ParticipantRoutageOutboundPort(ComponentI owner) throws Exception {
         super(RoutingManagementCI.class, owner);
     }
@@ -42,5 +41,4 @@ public class ParticipantRoutageOutboundPort extends AbstractOutboundPort impleme
                     return null;
                 });
     }
-
 }
