@@ -7,7 +7,6 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
 import java.util.Set;
 
 public interface RoutingManagementCI extends OfferedCI, RequiredCI{
-
     /**
      * Description : Update the routing information
      * @param neighbour of type P2PAddressI -
