@@ -59,8 +59,6 @@ public class Participant extends AbstractComponent {
     }
 
     public void registrateOnNetwork() throws Exception {
-        this.doPortConnection(this.prop.getPortURI(), ConstantsValues.URI_REGISTRATION_SIMULATOR_PORT, RegistrationConnector.class.getCanonicalName());
-
         this.prop = new ParticipantRegistrationOutboundPort(this);   //creation du port
         this.prop.publishPort();     //publication du port
         this.doPortConnection(this.prop.getPortURI(), ConstantsValues.URI_REGISTRATION_SIMULATOR_PORT, RegistrationConnector.class.getCanonicalName());
@@ -142,23 +140,26 @@ public class Participant extends AbstractComponent {
         if (!this.routingAddressPortTable.containsKey(address)){
             this.routingAddressPortTable.put(address, routingInboundPortURI);
         }
-        //routingtable en parametre doit etre celle du destinataire
-        this.myRoutingTable.updateRouting(address, this.myRoutingTable.getRoutes(address));
     }
 
+    public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) throws Exception{
+        myLogger.logMessage("ma routingTablePort: " + this.routingAddressPortTable);
+    }
 
+    public void updateAccessPoint(P2PAddressI neighbour, int numberOfHops) throws Exception{
 
+    }
 
     public void floodMessageTransit(Message m) throws Exception {
         //if the message hit the receiver,
         if (m.getAddress().equals(this.myInformations.getAddress())){
-            // System.out.println(
-            //         this.myInformations.getAddress().toString()
-            //                 + " | Msg name : "
-            //                 + m
-            //                 + " | Msg content : "
-            //                 + m.getContent()
-            // );
+                myLogger.logMessage(
+                     this.myInformations.getAddress().toString()
+                             + " | Msg name : "
+                             + m
+                             + " | Msg content : "
+                             + m.getContent()
+             );
         }
         else {
             m.decrementHops();
@@ -184,11 +185,6 @@ public class Participant extends AbstractComponent {
                     this.pcop.routeMessage(m);
                 }
                 pcop.doDisconnection();
-
-        if (!this.routingAddressPortTable.containsKey(address)){
-            this.routingAddressPortTable.put(address, routingInboundPortURI);
-        }
-
                 this.logMessage("Msg died");
             }
         }
@@ -198,19 +194,17 @@ public class Participant extends AbstractComponent {
      */
     public void routeByTable(Message m) throws Exception {
         if(this.myInformations.getAddress().equals(m.getAddress())){
-            //TODO call the logger to log the packet details just below
-            System.out.println(
+            myLogger.logMessage(
                     this.myInformations.getAddress().toString()
                             + " | Msg name : "
                             + m.hashCode()
                             + " | Msg send to : "
                             + m.getAddress()
             );
-            System.out.println("Message arrived to destination");
+            myLogger.logMessage("Message arrived to destination");
         }
         if(this.myRoutingTable.getTable().isEmpty()){
-            //TODO invoke the logger here
-            System.out.println("C'est flooooodé");
+            myLogger.logMessage("routing table of "+this.myInformations.getAddress()+" is empty");
             return;
         }
         m.decrementHops();
@@ -238,7 +232,7 @@ public class Participant extends AbstractComponent {
         }
         //If the value has not been updated, aka the aimed node is not known
         if(nbrHops == Integer.MAX_VALUE){
-            //floodMessageTransit(m);
+            floodMessageTransit(m);
             return;
         }
         this.doPortConnection(this.pcop.getPortURI(),this.comAddressPortTable.get(next)
@@ -249,7 +243,7 @@ public class Participant extends AbstractComponent {
     public void routeMessage(MessageI m) throws Exception {
         if (m instanceof MessageI){
             Message msg = (Message) m;
-            floodMessageTransit(msg);
+            routeByTable(msg);
         }
     }
 
