@@ -3,10 +3,7 @@ package com.cfaaato;
 import com.connectors.CommunicationConnector;
 import com.connectors.RegistrationConnector;
 import com.data.*;
-import com.port.IPCommunicationOutboundPort;
-import com.port.ParticipantCommunicationInboundPort;
-import com.port.ParticipantCommunicationOutboundPort;
-import com.port.ParticipantRegistrationOutboundPort;
+import com.port.*;
 import com.services.AddressI;
 import com.services.IPAddressI;
 import com.services.MessageI;
@@ -22,6 +19,7 @@ public class AccessPoint extends AbstractComponent {
     protected ParticipantRegistrationOutboundPort proap;
     protected ParticipantCommunicationOutboundPort pcoap;
     protected ParticipantCommunicationInboundPort pciap;
+    protected IPCommunicationInboundPort ipcip;
     protected IPCommunicationOutboundPort ipcop;
     private IPAddress adressIP;
     private P2PAddress adressP2P;
@@ -40,10 +38,12 @@ public class AccessPoint extends AbstractComponent {
         //creation des ports
         this.pciap = new ParticipantCommunicationInboundPort(UUID.randomUUID().toString(),this);
         this.pcoap = new ParticipantCommunicationOutboundPort(this);
-        this.ipcop = new IPCommunicationOutboundPort(ipcopURI, this);
+        this.ipcop = new IPCommunicationOutboundPort(this);
+        this.ipcip = new IPCommunicationInboundPort(ipcopURI, this);
         //publication des ports
         this.pciap.publishPort();
         this.pcoap.publishPort();
+        this.ipcip.publishPort();
         this.ipcop.publishPort();
 
         this.adressP2P = new P2PAddress();

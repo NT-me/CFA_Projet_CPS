@@ -60,12 +60,12 @@ public class CVM extends AbstractCVM {
         AbstractComponent.createComponent(
                 AccessPoint.class.getCanonicalName(), new Object[]{1,0, new Position(1000, rd.nextInt(5)), AP2}
         );
-        AbstractComponent.createComponent(
+/*        AbstractComponent.createComponent(
                 IPDevice.class.getCanonicalName(), new Object[]{1,0, AP1}
         );
         AbstractComponent.createComponent(
                 IPDevice.class.getCanonicalName(), new Object[]{1,0, AP2}
-        );
+        );*/
 
         super.deploy();
     }

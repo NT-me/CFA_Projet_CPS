@@ -1,5 +1,6 @@
 package com.port;
 
+import com.cfaaato.AccessPoint;
 import com.services.IPAddressI;
 import com.services.IPCommunicationCI;
 import com.services.MessageI;
@@ -10,6 +11,10 @@ import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 public class IPCommunicationOutboundPort extends AbstractOutboundPort implements IPCommunicationCI {
     public IPCommunicationOutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, IPCommunicationCI.class, owner);
+    }
+
+    public IPCommunicationOutboundPort(ComponentI owner) throws Exception {
+        super(IPCommunicationCI.class, owner);
     }
 
     @Override
