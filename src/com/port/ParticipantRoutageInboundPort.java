@@ -15,7 +15,7 @@ public class ParticipantRoutageInboundPort extends AbstractOutboundPort implemen
     }
 
     @Override
-    public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) throws Exception{
+    public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) throws Exception {
         this.getOwner().handleRequest(
                 p -> {
                     try {
@@ -28,7 +28,7 @@ public class ParticipantRoutageInboundPort extends AbstractOutboundPort implemen
     }
 
     @Override
-    public void updateAccessPoint(P2PAddressI neighbour, int numberOfHops) throws Exception{
+    public void updateAccessPoint(P2PAddressI neighbour, int numberOfHops) throws Exception {
         this.getOwner().handleRequest(
                 p -> {
                     try {
@@ -40,3 +40,4 @@ public class ParticipantRoutageInboundPort extends AbstractOutboundPort implemen
                     return null;
                 });
     }
+}

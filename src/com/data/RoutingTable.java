@@ -1,11 +1,7 @@
 package com.data;
 import com.services.*;
+
 import java.util.*;
-import com.services.P2PAddressI;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 public class RoutingTable {
 
@@ -49,8 +45,4 @@ public class RoutingTable {
         return this.table.values();
     }
 
-    public HashMap<P2PAddressI, Set<RouteInfo>> getTable() {
-        return this.table;
-    }
 }
-
