@@ -45,5 +45,8 @@ public class Message implements MessageI {
     @Override
     public void decrementHops() {
         this.hops--;
+        if(this.hops<=0){
+            this.stillAlive=false;
+        }
     }
 }

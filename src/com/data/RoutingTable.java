@@ -1,7 +1,7 @@
 package com.data;
-
+import com.services.*;
+import java.util.*;
 import com.services.P2PAddressI;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,7 +9,8 @@ import java.util.Set;
 
 public class RoutingTable {
 
-    //Chaque P2PAddressI est un voisin du participant à qui la table de routage appartient. Ce dernier aura plusieurs RouteInfo pour tout les autres participants
+    //Chaque P2PAddressI est un voisin du participant à qui la table de routage appartient.
+    // Ce dernier aura plusieurs RouteInfo pour tout les autres participants.
     HashMap<P2PAddressI, Set<RouteInfo>> table;
 
     public RoutingTable() {

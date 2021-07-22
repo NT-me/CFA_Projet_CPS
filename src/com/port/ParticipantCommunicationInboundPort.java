@@ -28,16 +28,26 @@ public class ParticipantCommunicationInboundPort extends AbstractInboundPort imp
 
     @Override
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
-        this.getOwner().handleRequest(
-                p -> {
-                    try {
-                        ((Participant) p).connect(address, communicationInboundPortURI, routingInboundPortURI);
+        this.getOwner().runTask(
+            p->{
+                try {
+                    ((Participant) p).connect(address, communicationInboundPortURI, routingInboundPortURI);
+                } catch (Exception e) {
+                //         throw new RuntimeException(e);
+                e.printStackTrace();
+                }
+        });
+        // this.getOwner().handleRequest(
 
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    return null;
-                });
+        //         p -> {
+        //             try {
+        //                 ((Participant) p).connect(address, communicationInboundPortURI, routingInboundPortURI);
+
+        //             } catch (Exception e) {
+        //                 throw new RuntimeException(e);
+        //             }
+        //             return null;
+        //         });
     }
 
     @Override
