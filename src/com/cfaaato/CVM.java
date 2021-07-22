@@ -20,28 +20,26 @@ public class CVM extends AbstractCVM {
                 Simulator.class.getCanonicalName(), new Object[]{1,0}
         );
 
-                // Adding P2P elements inside the simulator
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
-                // #1
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
-                // #2
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
+        // Adding P2P elements inside the simulator
+        AbstractComponent.createComponent(Participant.class.getCanonicalName(),
+                        new Object[] { 3, 0, new Position(1, 0) });
+        // #1
+        AbstractComponent.createComponent(Participant.class.getCanonicalName(),
+                        new Object[] { 3, 0, new Position(1, 0) });
+        // #2
+        AbstractComponent.createComponent(Participant.class.getCanonicalName(),
+                        new Object[] { 3, 0, new Position(1, 0) });
 
-                //#3
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
+        //#3
+              AbstractComponent.createComponent(Participant.class.getCanonicalName(),
+                        new Object[] { 3, 0, new Position(1, 6) });
 
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
+/*
+        //#3
+        AbstractComponent.createComponent(Participant.class.getCanonicalName(),
+                        new Object[] { 3, 0, new Position(1, 1) });*/
 
-                //#3
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
-
-                super.deploy();
+        super.deploy();
         }
 
         public static void main(String[] args) {
@@ -49,7 +47,7 @@ public class CVM extends AbstractCVM {
                         // fr.sorbonne_u.components.examples.basic_cs.CVM cvm = new
                         // fr.sorbonne_u.components.examples.basic_cs.CVM();
                         CVM cvm = new CVM();
-                        cvm.startStandardLifeCycle(4000L);
+                        cvm.startStandardLifeCycle(10000L);
                         // Thread.sleep(2000L);
                         System.exit(0);
                 } catch (Exception e) {

@@ -22,22 +22,21 @@ public class ParticipantCommunicationInboundPort extends AbstractOutboundPort im
                 e.printStackTrace();
                 }
         });
-        // this.getOwner().handleRequest(
+/*         this.getOwner().handleRequest(
+                 p -> {
+                     try {
+                         ((Participant) p).connect(address, communicationInboundPortURI, routingInboundPortURI);
 
-        //         p -> {
-        //             try {
-        //                 ((Participant) p).connect(address, communicationInboundPortURI, routingInboundPortURI);
-
-        //             } catch (Exception e) {
-        //                 throw new RuntimeException(e);
-        //             }
-        //             return null;
-        //         });
+                     } catch (Exception e) {
+                         throw new RuntimeException(e);
+                     }
+                     return null;
+                 });*/
     }
 
     @Override
     public void routeMessage(MessageI m) throws Exception {
-        this.getOwner().handleRequest(
+        this.getOwner().runTask(
                 p -> {
                     try {
                         ((Participant) p).routeMessage(m);
@@ -45,7 +44,7 @@ public class ParticipantCommunicationInboundPort extends AbstractOutboundPort im
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                    return null;
+                    /*return null;*/
                 });
     }
     /*

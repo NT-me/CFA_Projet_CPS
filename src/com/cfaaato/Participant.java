@@ -11,6 +11,8 @@ import fr.sorbonne_u.components.exceptions.*;
 import fr.sorbonne_u.components.helpers.*;
 
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RequiredInterfaces(required={RegistrationCI.class, CommunicationCI.class})
 @OfferedInterfaces(offered = {CommunicationCI.class})
@@ -126,7 +128,6 @@ public class Participant extends AbstractComponent {
             this.logMessage("connect called from :"+ address);
             this.comAddressPortTable.put(address, communicationInboundPortURI);
 
-
             // this.doPortConnection(
             //         this.pcop.getPortURI(),
             //         communicationInboundPortURI,
@@ -155,21 +156,25 @@ public class Participant extends AbstractComponent {
         else {
             m.decrementHops();
             if (m.stillAlive()){
+                // Copy hashmap for every thread
+                HashMap<P2PAddressI, String> copy_comAddressPortTable = (HashMap<P2PAddressI, String>) this.comAddressPortTable.clone();
+
                 //Iterating through HashMap
-                for (Map.Entry<P2PAddressI, String> item : this.comAddressPortTable.entrySet()) {
+                for (Map.Entry<P2PAddressI, String> item : copy_comAddressPortTable.entrySet()) {
                     if(pcop.connected()){
                         pcop.doDisconnection();
                     }
+
                     this.doPortConnection(
                             this.pcop.getPortURI(),
                             item.getValue(),
                             CommunicationConnector.class.getCanonicalName()
                     );
-
-
                     this.pcop.routeMessage(m);
                 }
-                pcop.doDisconnection();
+                /*pcop.doDisconnection();*/
+            }
+            else{
                 this.logMessage("Msg died");
             }
         }
@@ -190,6 +195,7 @@ public class Participant extends AbstractComponent {
         }
         if(this.myRoutingTable.getTable().isEmpty()){
             myLogger.logMessage("routing table of "+this.myInformations.getAddress()+" is empty");
+            floodMessageTransit(m);
             return;
         }
         m.decrementHops();
@@ -264,8 +270,6 @@ public class Participant extends AbstractComponent {
 
     @Override
     public void execute() throws Exception {
-
-
         // Random rd = new Random(); // creating Random object
         // rd.nextInt();
 
