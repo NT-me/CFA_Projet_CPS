@@ -148,13 +148,14 @@ public class Participant extends AbstractComponent {
     }
 
     public void floodMessageTransit(Message m) throws Exception {
-        //if the message hit the receiver,
+        //if the message hit the receiver, it's done
         if (m.getAddress().equals(this.myInformations.getAddress())){
+            myLogger.logMessage("Message arrived");
         }
         else {
             m.decrementHops();
             if (m.stillAlive()){
-                // Iterating HashMap through for loop
+                //Iterating through HashMap
                 for (Map.Entry<P2PAddressI, String> item : this.comAddressPortTable.entrySet()) {
                     if(pcop.connected()){
                         pcop.doDisconnection();
@@ -231,20 +232,8 @@ public class Participant extends AbstractComponent {
         }
     }
 
-    public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) throws Exception{
-        HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
-        Set<P2PAddressI> allNeighbor = new HashSet<>();
-        for (Map.Entry<P2PAddressI,Set<RouteInfo>> table: map.entrySet()) {
-            allNeighbor.add(table.getKey());
-        }
-        //System.out.println("mon adresse: " + this.myInformations.getAddress() + " neighbor " +map);
-    }
 
-    public void updateAccessPoint(P2PAddressI neighbour, int numberOfHops) throws Exception{
-
-    }
     //Les tables de routage vont être mise a jour
-
     public void updateNeighborsRoutingTable() throws Exception {
         HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
         System.out.println("bonjour mon adresse: " + this.myInformations.getAddress());
@@ -293,7 +282,7 @@ public class Participant extends AbstractComponent {
                 routeMessage(msg);
             }
             updateNeighborsRoutingTable();
-          
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -308,22 +297,20 @@ public class Participant extends AbstractComponent {
         //System.out.println("mon adresse: " + this.);
 //        System.out.println("mon portInbound: " + this.prtip.getPortURI());
 //        System.out.println("ma routingTablePort: " + this.routingAddressPortTable);
+        System.out.println("Table de routage :");
         HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
         System.out.println(map);
         for (Map.Entry<P2PAddressI,Set<RouteInfo>> table: map.entrySet()) {
             //System.out.println("mes routes: " + this.myRoutingTable.getRoutes(table.getKey()));
             Set<RouteInfo> routeInfo = table.getValue();
             Iterator<RouteInfo> iterator = routeInfo.iterator();
-            while(iterator.hasNext()) {//Looping throught the collection
+            while(iterator.hasNext()) {
                 RouteInfo actual = iterator.next();
                 //System.out.println("mon adresse: " + this.myInformations.getAddress() + "mes voisins: " + table.getKey() + " ma destination " + actual.getDestination() + "");
             }
         }
-
-
         this.doPortDisconnection(this.prop.getPortURI());
         this.prop.unpublishPort();
-
         super.finalise();
     }
 }
