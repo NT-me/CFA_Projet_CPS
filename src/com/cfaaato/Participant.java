@@ -92,9 +92,7 @@ public class Participant extends AbstractComponent {
         this.logMessage(this.myInformations.getAddress().toString());
         this.logMessage(" nb neighbors : "+ this.neighbors.size());
 
-        int Tour =1;
         for (ConnectionInfo coi : this.neighbors){
-            this.logMessage(" Tour :"+Tour+ " neighbor :"+ coi.getAddress());
 
             this.doPortConnection(
                     this.pcop.getPortURI(),
@@ -119,14 +117,11 @@ public class Participant extends AbstractComponent {
                      coi.getRoutingInboundPortURI()
              );
 
-            this.logMessage(" fin Tour :"+Tour+ " neighbor :"+ coi.getAddress());
-            Tour++;
         }
     }
 
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
         if (!this.comAddressPortTable.containsKey(address)){
-            this.logMessage("connect called from :"+ address);
             this.comAddressPortTable.put(address, communicationInboundPortURI);
 
              this.doPortConnection(
