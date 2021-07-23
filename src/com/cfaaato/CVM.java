@@ -28,16 +28,16 @@ public class CVM extends AbstractCVM {
                 AbstractComponent.createComponent(Participant.class.getCanonicalName(),
                                 new Object[] { 2, 0, new Position(1, 1) });
 
-                //#3
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
-
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
-
-                //#3
-                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
-                                new Object[] { 2, 0, new Position(1, 1) });
+//                //#3
+//                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
+//                                new Object[] { 2, 0, new Position(1, 1) });
+//
+//                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
+//                                new Object[] { 2, 0, new Position(1, 1) });
+//
+//                //#3
+//                AbstractComponent.createComponent(Participant.class.getCanonicalName(),
+//                                new Object[] { 2, 0, new Position(1, 1) });
 
                 super.deploy();
         }

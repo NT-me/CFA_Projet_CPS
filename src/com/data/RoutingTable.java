@@ -31,6 +31,16 @@ public class RoutingTable {
         }
     }
 
+    public void addNewAddressRoutes(P2PAddressI myAdress, Set<RouteInfo> routes){
+            this.table.put(myAdress, routes);
+    }
+
+    public void updateSetRoute(P2PAddressI myAdress, RouteInfo route){
+        RouteInfo modifiedRoute = route;
+        modifiedRoute.setNumberOfHops(modifiedRoute.getNumberOfHops() + 1);
+        this.table.get(myAdress).add(modifiedRoute);
+    }
+
     public Set<RouteInfo> getRoutes(P2PAddressI address){
         return this.table.get(address);
     }

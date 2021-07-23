@@ -2,6 +2,7 @@ package com.port;
 
 import com.cfaaato.Participant;
 import com.data.RouteInfo;
+import com.services.CommunicationCI;
 import com.services.P2PAddressI;
 import com.services.RoutingManagementCI;
 import fr.sorbonne_u.components.ComponentI;
@@ -27,31 +28,13 @@ public class ParticipantRoutageOutboundPort extends AbstractOutboundPort impleme
 
     @Override
     public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) throws Exception{
-        this.getOwner().handleRequest(
-                p -> {
-                    try {
-                        ((Participant) p).updateRouting(neighbour, routes);
+        ((RoutingManagementCI)this.getConnector()).updateRouting(neighbour, routes);
 
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    return null;
-                });
     }
-
 
     @Override
     public void updateAccessPoint(P2PAddressI neighbour, int numberOfHops) throws Exception{
-        this.getOwner().handleRequest(
-                p -> {
-                    try {
-                        ((Participant) p).updateAccessPoint(neighbour, numberOfHops);
-
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    return null;
-                });
+        ((RoutingManagementCI)this.getConnector()).updateAccessPoint(neighbour, numberOfHops);
     }
 
 }
