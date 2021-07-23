@@ -9,11 +9,19 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * The type Simulator.
+ */
 public class Simulator extends AbstractComponent {
 
     private Set<ConnectionInfo> listDevicesInformation;
     private SimulatorInboundPort sip;
 
+    /**
+     * Description: Instantiates a new Simulator.
+     * @param nbThreads of type int - the number of threads to use
+     * @param nbSchedulableThreads of type int - the number of schedulable threads
+     */
     protected Simulator(int nbThreads, int nbSchedulableThreads) {
         super(nbThreads, nbSchedulableThreads);
         this.listDevicesInformation = new HashSet<ConnectionInfo>();
@@ -22,11 +30,16 @@ public class Simulator extends AbstractComponent {
             this.sip.publishPort();
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
+    /**
+     * Description : Register internal set.
+     * @param deviceInf of type ConnectionInfo - the device informations
+     * @return a set of connection of type ConnectionInfo
+     * @throws Exception the exception
+     */
     public Set<ConnectionInfo> registerInternal(ConnectionInfo deviceInf) throws Exception{
 
         Set<ConnectionInfo> ret_Set = new HashSet<>(this.listDevicesInformation);

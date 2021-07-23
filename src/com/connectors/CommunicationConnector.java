@@ -5,7 +5,12 @@ import com.services.MessageI;
 import com.services.P2PAddressI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
+/**
+ * The type Communication connector.
+ */
 public class CommunicationConnector extends AbstractConnector implements CommunicationCI {
+
+
     @Override
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
         ((CommunicationCI)this.offering).connect(

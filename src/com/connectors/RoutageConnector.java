@@ -7,6 +7,9 @@ import fr.sorbonne_u.components.connectors.AbstractConnector;
 
 import java.util.Set;
 
+/**
+ * The type Routage connector.
+ */
 public class RoutageConnector extends AbstractConnector implements RoutingManagementCI {
     @Override
     public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) throws Exception {

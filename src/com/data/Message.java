@@ -6,6 +6,9 @@ import com.utils.ConstantsValues;
 
 import java.io.Serializable;
 
+/**
+ * The type Message.
+ */
 public class Message implements MessageI {
 
     private AddressI adress;
@@ -13,18 +16,15 @@ public class Message implements MessageI {
     private boolean stillAlive;
     private int hops;
 
+    /**
+     * Description: Instantiates a new Message.
+     * @param adress of type AddressI - the address to transmit to
+     */
     public Message(AddressI adress) {
         this.adress = adress;
         this.content = "Full";
         this.stillAlive = true;
         this.hops = ConstantsValues.MAX_HOPS;
-    }
-
-    public Message(AddressI adress, Serializable content, boolean stillAlive, int hops) {
-        this.adress = adress;
-        this.content = content;
-        this.stillAlive = stillAlive;
-        this.hops = hops;
     }
 
     @Override

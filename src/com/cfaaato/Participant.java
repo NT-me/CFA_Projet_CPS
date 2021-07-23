@@ -13,18 +13,39 @@ import fr.sorbonne_u.components.helpers.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The type Participant.
+ */
 @RequiredInterfaces(required={RegistrationCI.class, CommunicationCI.class})
 @OfferedInterfaces(offered = {CommunicationCI.class})
 public class Participant extends AbstractComponent {
 
-    //Ports declaration
+    /**
+     * The Prop.
+     */
+//Ports declaration
     protected ParticipantRegistrationOutboundPort prop;
+    /**
+     * The Pcop.
+     */
     protected ParticipantCommunicationOutboundPort pcop;
+    /**
+     * The Pcip.
+     */
     protected ParticipantCommunicationInboundPort pcip;
+    /**
+     * The Prtip.
+     */
     protected ParticipantRoutageInboundPort prtip;
+    /**
+     * The Prtop.
+     */
     protected ParticipantRoutageOutboundPort prtop;
 
-    //Cnnectors informations
+    /**
+     * The Routage connector.
+     */
+//Cnnectors informations
     RoutageConnector routageConnector;
 
     //Connections Informations of this element
@@ -36,6 +57,13 @@ public class Participant extends AbstractComponent {
     private Position pos;
     private Logger myLogger;
 
+    /**
+     * Description: Instantiates a new Participant.
+     * @param nbThreads of type int - the number of threads
+     * @param nbSchedulableThreads of type int - the number schedulable threads
+     * @param pos of type Position - the position of the particiant
+     * @throws Exception the exception
+     */
     protected Participant(int nbThreads, int nbSchedulableThreads, Position pos) throws Exception {
         super(nbThreads, nbSchedulableThreads);
         this.neighbors = new HashSet<>();
@@ -57,6 +85,11 @@ public class Participant extends AbstractComponent {
         this.setLogger(myLogger);
     }
 
+    /**
+     * Description: Registrate on network, notice all the reachable participant of his existence by computing
+     * a table of neighbors
+     * @throws Exception the exception
+     */
     public void registrateOnNetwork() throws Exception {
         this.prop = new ParticipantRegistrationOutboundPort(this);   //creation du port
         this.prop.publishPort();     //publication du port
@@ -86,9 +119,11 @@ public class Participant extends AbstractComponent {
 
     }
 
+    /**
+     * Description: add a ne member to the network
+     * @throws Exception the exception
+     */
     public void newOnNetwork() throws Exception {
-        //TODO se connecte aux anciens voisins -- seems ok
-
         this.logMessage(this.myInformations.getAddress().toString());
         this.logMessage(" nb neighbors : "+ this.neighbors.size());
 
@@ -120,6 +155,13 @@ public class Participant extends AbstractComponent {
         }
     }
 
+    /**
+     * Description: Connect a participant to another one and fill up the ports (routage and communication) table
+     * @param address of type P2PAddressI - the address of the calling participant
+     * @param communicationInboundPortURI of type String - the URI of the communication inbound port
+     * @param routingInboundPortURI of type String - the URI of the routing inbound port
+     * @throws Exception the exception
+     */
     public void connect(P2PAddressI address, String communicationInboundPortURI, String routingInboundPortURI) throws Exception {
         if (!this.comAddressPortTable.containsKey(address)){
             this.comAddressPortTable.put(address, communicationInboundPortURI);
@@ -136,6 +178,15 @@ public class Participant extends AbstractComponent {
         }
     }
 
+
+
+
+
+    /**
+     * Description: Flood the network to reach the receiver.
+     * @param m of type Message - the message to send
+     * @throws Exception the exception
+     */
     public void floodMessageTransit(Message m) throws Exception {
         //if the message hit the receiver, it's done
         if (m.getAddress().equals(this.myInformations.getAddress())){
@@ -164,6 +215,11 @@ public class Participant extends AbstractComponent {
         }
     }
 
+    /**
+     * Description: Route the message by choosing the best way to the receiver (lightest coast)
+     * @param m of Message - the message to send
+     * @throws Exception the exception
+     */
     /*this method should parse all address contained inside the table attribut
      */
     public void routeByTable(Message m) throws Exception {
@@ -215,6 +271,11 @@ public class Participant extends AbstractComponent {
         this.pcop.routeMessage(m);
     }
 
+    /**
+     * Description: Route the message on the network, should be called to transit the message.
+     * @param m of type Message - the message to send
+     * @throws Exception the exception
+     */
     public void routeMessage(MessageI m) throws Exception {
         if (m instanceof MessageI){
             Message msg = (Message) m;
@@ -222,6 +283,12 @@ public class Participant extends AbstractComponent {
         }
     }
 
+        /**
+     * Description: Update routing network.
+     * @param neighbour of type P2Pb - the address of neighbor on the network
+     * @param routes    of type RouteInfo - a list of routes to a destination
+     * @throws Exception the exception
+     */
     public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) throws Exception{
         HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
         boolean isPresent = false;
@@ -253,11 +320,20 @@ public class Participant extends AbstractComponent {
 
     }
 
+    /**
+     * Description: Update access point and the number of hops
+     * @param neighbour    of type P2PAddressI - the neighbour
+     * @param numberOfHops of type int - the number of hops o update
+     * @throws Exception the exception
+     */
     public void updateAccessPoint(P2PAddressI neighbour, int numberOfHops) throws Exception{
-
     }
-    //Les tables de routage vont être mise a jour
 
+    /**
+     * Description: Update neighbors routing table.
+     * @throws Exception the exception
+     */
+//Les tables de routage vont être mise a jour
     public void updateNeighborsRoutingTableBegin() throws Exception {
         HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
         if (!map.isEmpty()) {
@@ -372,7 +448,7 @@ public class Participant extends AbstractComponent {
             Iterator<RouteInfo> iterator = routeInfo.iterator();
             while(iterator.hasNext()) {
                 RouteInfo actual = iterator.next();
-                this.logMessage(actual + " allo " + table.getKey() + " test " + actual.getDestination() + "  " + actual.getNumberOfHops());
+                this.logMessage(actual + " Voisin: " + table.getKey() + " destination " + actual.getDestination() + " nb hops " + actual.getNumberOfHops());
             }
         }
         this.printExecutionLog();

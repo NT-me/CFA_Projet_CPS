@@ -3,15 +3,22 @@ package com.data;
 import com.services.AddressI;
 import com.services.P2PAddressI;
 
+/**
+ * The type P 2 p address.
+ */
 public class P2PAddress implements P2PAddressI {
+    /**
+     * The Is p 2 p address.
+     */
     boolean isP2PAddress;
+    /**
+     * The Is ip address.
+     */
     boolean isIPAddress;
 
-    public P2PAddress(boolean isP2PAddress, boolean isIPAddress) {
-        this.isP2PAddress = isP2PAddress;
-        this.isIPAddress = isIPAddress;
-    }
-
+    /**
+     * Descripton: Instantiates a new P2PAddress.
+     */
     public P2PAddress(){
         this.isIPAddress = false;
         this.isP2PAddress = true;

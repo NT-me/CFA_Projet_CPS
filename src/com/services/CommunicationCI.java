@@ -4,7 +4,7 @@ import fr.sorbonne_u.components.interfaces.*;
 
 public interface CommunicationCI extends RequiredCI, OfferedCI {
 
-    /** TODO remplir la javadoc
+    /**
      * Description : Connection protocol to bound two devices, two ports, or two connectors
      * @param address of type P2PAddressI - The address of the receiver
      * @param communicationInboundPortURI of type String - the communicationInboundPort to connect to
