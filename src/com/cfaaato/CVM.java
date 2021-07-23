@@ -7,16 +7,18 @@ import java.util.Random;
 
 public class CVM extends AbstractCVM {
 
-        public CVM() throws Exception {
-                super();
-        }
+    public CVM() throws Exception {
+        super();
+    }
 
-        @Override
-        public void deploy() throws Exception {
-                Random rd = new Random(); // creating Random object
-                rd.nextInt();
-                // Create the playground
-                AbstractComponent.createComponent(Simulator.class.getCanonicalName(), new Object[] { 1, 0 });
+    @Override
+    public void deploy() throws Exception{
+        Random rd = new Random(); // creating Random object
+        rd.nextInt();
+        //Create the playground
+        AbstractComponent.createComponent(
+                Simulator.class.getCanonicalName(), new Object[]{1,0}
+        );
 
                 // Adding P2P elements inside the simulator
                 AbstractComponent.createComponent(Participant.class.getCanonicalName(),

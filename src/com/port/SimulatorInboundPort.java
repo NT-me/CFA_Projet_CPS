@@ -12,21 +12,8 @@ import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import java.util.Set;
 
 public class SimulatorInboundPort extends AbstractInboundPort implements RegistrationCI {
-    public SimulatorInboundPort(String uri, Class<? extends OfferedCI> implementedInterface, ComponentI owner, String pluginURI, String executorServiceURI) throws Exception {
-        super(uri, implementedInterface, owner, pluginURI, executorServiceURI);
-    }
 
-    public SimulatorInboundPort(Class<? extends OfferedCI> implementedInterface, ComponentI owner, String pluginURI, String executorServiceURI) throws Exception {
-        super(implementedInterface, owner, pluginURI, executorServiceURI);
-    }
-
-    public SimulatorInboundPort(String uri, Class<? extends OfferedCI> implementedInterface, ComponentI owner) throws Exception {
-        super(uri, implementedInterface, owner);
-    }
-
-    public SimulatorInboundPort(Class<? extends OfferedCI> implementedInterface, ComponentI owner) throws Exception {
-        super(implementedInterface, owner);
-    }public static final String URI_REGISTRATION_SIMULATOR_PORT = "Porc Originel";
+    public static final String URI_REGISTRATION_SIMULATOR_PORT = "Porc Originel";
 
     public SimulatorInboundPort(ComponentI owner) throws Exception {
         super(OfferedCI.class,owner);
