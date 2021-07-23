@@ -144,7 +144,7 @@ public class Participant extends AbstractComponent {
     public void floodMessageTransit(Message m) throws Exception {
         //if the message hit the receiver, it's done
         if (m.getAddress().equals(this.myInformations.getAddress())){
-            myLogger.logMessage("Message arrived");
+            myLogger.logMessage("Message arrived to destination by flood");
         }
         else {
             m.decrementHops();
@@ -180,10 +180,11 @@ public class Participant extends AbstractComponent {
                             + " | Msg send to : "
                             + m.getAddress()
             );
-            myLogger.logMessage("Message arrived to destination");
+            myLogger.logMessage("Message arrived to destination by rooting");
         }
         if(this.myRoutingTable.getTable().isEmpty()){
             myLogger.logMessage("routing table of "+this.myInformations.getAddress()+" is empty");
+            floodMessageTransit(m);
             return;
         }
         m.decrementHops();
@@ -262,7 +263,7 @@ public class Participant extends AbstractComponent {
     }
     //Les tables de routage vont être mise a jour
 
-    public void updateNeighborsRoutingTable1() throws Exception {
+    public void updateNeighborsRoutingTableBegin() throws Exception {
         HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
         if (!map.isEmpty()) {
             for (Map.Entry<P2PAddressI, Set<RouteInfo>> table : map.entrySet()) {
@@ -280,7 +281,7 @@ public class Participant extends AbstractComponent {
         }
     }
 
-    public void updateNeighborsRoutingTable2() throws Exception {
+    public void updateNeighborsRoutingTableWithOther() throws Exception {
         HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
         P2PAddressI address = new P2PAddress();
         Set<RouteInfo> routeInfo = new HashSet<>();
@@ -346,16 +347,19 @@ public class Participant extends AbstractComponent {
         try {
             registrateOnNetwork();
             newOnNetwork();
-//            if (this.comAddressPortTable.keySet().toArray().length > 0){
-//                Object randomName = this.comAddressPortTable.keySet().toArray()[new Random().nextInt(this.comAddressPortTable.keySet().toArray().length)];
-//                Message msg = new Message((AddressI) randomName);
-//                routeMessage(msg);
-//            }
-            updateNeighborsRoutingTable1();
+
             Thread.sleep(1000);
-            updateNeighborsRoutingTable2();
+            updateNeighborsRoutingTableBegin();
             Thread.sleep(1000);
-            updateNeighborsRoutingTable2();
+            updateNeighborsRoutingTableWithOther();
+            Thread.sleep(1000);
+
+            if (this.comAddressPortTable.keySet().toArray().length > 0){
+                Object randomName = this.comAddressPortTable.keySet().toArray()[new Random().nextInt(this.comAddressPortTable.keySet().toArray().length)];
+                Message msg = new Message((AddressI) randomName);
+                routeMessage(msg);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
