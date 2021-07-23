@@ -188,11 +188,11 @@ public class Participant extends AbstractComponent {
     }
 
     public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) throws Exception{
-        this.logMessage(" est entre dans update avec: " + neighbour);
         HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
         boolean isPresent = false;
         for (Map.Entry<P2PAddressI,Set<RouteInfo>> table: map.entrySet()) {
             this.logMessage(" est entre dans for avec: " + neighbour);
+            this.logMessage(" est entre dans for avec: " + table.getKey());
             if (table.getKey().equals(neighbour)){
                 this.logMessage(" est entre dans if avec: " + neighbour);
                 isPresent = true;
@@ -259,13 +259,31 @@ public class Participant extends AbstractComponent {
                     routeInfo = table.getValue();
                     boucle = true;
                 }
-                this.doPortConnection(
-                        this.prtop.getPortURI(),
-                        this.routingAddressPortTable.get(table.getKey()),
-                        RoutageConnector.class.getCanonicalName()
-                );
-                this.prtop.updateRouting(address, routeInfo);
+                if(boucle) {
+                    this.doPortConnection(
+                            this.prtop.getPortURI(),
+                            this.routingAddressPortTable.get(table.getKey()),
+                            RoutageConnector.class.getCanonicalName()
+                    );
+                    this.prtop.updateRouting(address, routeInfo);
+                }
+            }
+            boucle = false;
+            for (Map.Entry<P2PAddressI, Set<RouteInfo>> table : map.entrySet()) {
+                if(!boucle) {
+                    address = table.getKey();
+                    routeInfo = table.getValue();
+                    boucle = true;
+                }
+                if(boucle) {
+                    this.doPortConnection(
+                            this.prtop.getPortURI(),
+                            this.routingAddressPortTable.get(address),
+                            RoutageConnector.class.getCanonicalName()
+                    );
 
+                    this.prtop.updateRouting(table.getKey(), table.getValue());
+                }
             }
         }
     }
@@ -304,9 +322,9 @@ public class Participant extends AbstractComponent {
 //                routeMessage(msg);
 //            }
             updateNeighborsRoutingTable1();
-            Thread.sleep(500);
+            Thread.sleep(1000);
             updateNeighborsRoutingTable2();
-            Thread.sleep(500);
+            Thread.sleep(1000);
             updateNeighborsRoutingTable2();
         } catch (Exception e) {
             e.printStackTrace();

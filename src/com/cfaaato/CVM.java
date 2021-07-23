@@ -47,7 +47,7 @@ public class CVM extends AbstractCVM {
                         // fr.sorbonne_u.components.examples.basic_cs.CVM cvm = new
                         // fr.sorbonne_u.components.examples.basic_cs.CVM();
                         CVM cvm = new CVM();
-                        cvm.startStandardLifeCycle(4000L);
+                        cvm.startStandardLifeCycle(5000L);
                         // Thread.sleep(2000L);
                         System.exit(0);
                 } catch (Exception e) {

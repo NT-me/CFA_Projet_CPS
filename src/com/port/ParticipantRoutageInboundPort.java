@@ -28,17 +28,26 @@ public class ParticipantRoutageInboundPort extends AbstractInboundPort implement
 
     @Override
     public void updateRouting(P2PAddressI neighbour, Set<RouteInfo> routes) throws Exception{
-        this.getOwner().handleRequest(
+        this.getOwner().runTask(
                 p -> {
                     try {
                         ((Participant) p).updateRouting(neighbour, routes);
 
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                       // throw new RuntimeException(e);
+                        e.printStackTrace();
                     }
-                    return null;
                 });
     }
+//     this.getOwner().runTask(
+//            p->{
+//        try {
+//            ((Participant) p).connect(address, communicationInboundPortURI, routingInboundPortURI);
+//        } catch (Exception e) {
+//            //         throw new RuntimeException(e);
+//            e.printStackTrace();
+//        }
+//    });
 
     @Override
     public void updateAccessPoint(P2PAddressI neighbour, int numberOfHops) throws Exception{
