@@ -204,21 +204,21 @@ public class Participant extends AbstractComponent {
                     Iterator<RouteInfo> newiterator = routes.iterator();
                     while (newiterator.hasNext()) {
                         RouteInfo newactualroute = newiterator.next();
-                        this.logMessage("ma destination: " + myactualroute.getDestination() + "ma nouvelle destination: " + newactualroute.getDestination());
-                        if (myactualroute.getDestination().equals(newactualroute.getDestination()) && myactualroute.getNumberOfHops() > newactualroute.getNumberOfHops()) {
-                            this.myRoutingTable.updateSetRoute(neighbour,newactualroute);
+                        if (myactualroute.getDestination().equals(newactualroute.getDestination())) {
+                            if (myactualroute.getNumberOfHops() > newactualroute.getNumberOfHops()) {
+                                this.logMessage("here1");
+                                this.myRoutingTable.updateSetRoute(neighbour, newactualroute);
+                            }
                         }
-                        else if(!this.neighbors.contains(newactualroute.getDestination())){
-                            this.myRoutingTable.updateSetRoute(neighbour,newactualroute);
+                        else {
+                            this.logMessage("here2");
+                            this.myRoutingTable.updateNewRoute(neighbour,newactualroute);
                         }
                     }
                 }
             }
         }
-        this.logMessage(" est entre dans present : " + neighbour);
-        this.logMessage(" est entre  present avec: " + this.myInformations.getAddress());
         if (!isPresent && !this.myInformations.getAddress().equals(neighbour)){
-            this.logMessage(" est entre dans present avec: " + neighbour);
             this.myRoutingTable.addNewAddressRoutes(neighbour,routes);
         }
 
@@ -229,13 +229,10 @@ public class Participant extends AbstractComponent {
     }
     //Les tables de routage vont être mise a jour
 
-    public void updateNeighborsRoutingTable() throws Exception {
+    public void updateNeighborsRoutingTable1() throws Exception {
         HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
         if (!map.isEmpty()) {
             for (Map.Entry<P2PAddressI, Set<RouteInfo>> table : map.entrySet()) {
-                //System.out.println("mon adresse: " + this.myInformations.getAddress());
-                Set<RouteInfo> routeInfo = table.getValue();
-
                 this.doPortConnection(
                         this.prtop.getPortURI(),
                         this.routingAddressPortTable.get(table.getKey()),
@@ -245,6 +242,29 @@ public class Participant extends AbstractComponent {
                 Set<RouteInfo> monSetdeRoutes = new HashSet<>();
                 monSetdeRoutes.add(myRoute);
                 this.prtop.updateRouting(this.myInformations.getAddress(), monSetdeRoutes);
+
+            }
+        }
+    }
+
+    public void updateNeighborsRoutingTable2() throws Exception {
+        HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
+        P2PAddressI address = new P2PAddress();
+        Set<RouteInfo> routeInfo = new HashSet<>();
+        boolean boucle = false;
+        if (!map.isEmpty()) {
+            for (Map.Entry<P2PAddressI, Set<RouteInfo>> table : map.entrySet()) {
+                if(!boucle) {
+                    address = table.getKey();
+                    routeInfo = table.getValue();
+                    boucle = true;
+                }
+                this.doPortConnection(
+                        this.prtop.getPortURI(),
+                        this.routingAddressPortTable.get(table.getKey()),
+                        RoutageConnector.class.getCanonicalName()
+                );
+                this.prtop.updateRouting(address, routeInfo);
 
             }
         }
@@ -283,7 +303,11 @@ public class Participant extends AbstractComponent {
 //                Message msg = new Message((AddressI) randomName);
 //                routeMessage(msg);
 //            }
-            updateNeighborsRoutingTable();
+            updateNeighborsRoutingTable1();
+            Thread.sleep(500);
+            updateNeighborsRoutingTable2();
+            Thread.sleep(500);
+            updateNeighborsRoutingTable2();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -298,10 +322,10 @@ public class Participant extends AbstractComponent {
             Iterator<RouteInfo> iterator = routeInfo.iterator();
             while (iterator.hasNext()) {//Looping throught the collection
                 RouteInfo actual = iterator.next();
-                this.logMessage(table.getKey() + " test " + actual.getDestination() + "  " + actual.getNumberOfHops());
+                this.logMessage(actual + " allo " + table.getKey() + " test " + actual.getDestination() + "  " + actual.getNumberOfHops());
             }
         }
-        this.logMessage("bbb" + this.myRoutingTable.getTable().entrySet());
+        this.logMessage("final table" + this.myRoutingTable.getTable().entrySet());
         this.printExecutionLog();
 
         this.doPortDisconnection(this.prop.getPortURI());

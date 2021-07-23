@@ -41,6 +41,10 @@ public class RoutingTable {
         this.table.get(myAdress).add(modifiedRoute);
     }
 
+    public void updateNewRoute(P2PAddressI myAdress, RouteInfo route){
+        this.table.get(myAdress).add(route);
+    }
+
     public Set<RouteInfo> getRoutes(P2PAddressI address){
         return this.table.get(address);
     }
