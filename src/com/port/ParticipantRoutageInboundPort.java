@@ -8,8 +8,17 @@ import fr.sorbonne_u.components.ports.*;
 
 import java.util.*;
 
+/**
+ * The type Participant routage inbound port.
+ */
 public class ParticipantRoutageInboundPort extends AbstractOutboundPort implements RoutingManagementCI {
 
+    /**
+     * Description: Instantiates a new Participant routage inbound port.
+     * @param uri of type String - the uri of that port
+     * @param owner of type ComponentI - the owner of that port
+     * @throws Exception the exception
+     */
     public ParticipantRoutageInboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, RoutingManagementCI.class, owner);
     }

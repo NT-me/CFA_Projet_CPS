@@ -5,8 +5,17 @@ import com.services.*;
 import fr.sorbonne_u.components.*;
 import fr.sorbonne_u.components.ports.*;
 
+/**
+ * The type Participant communication inbound port.
+ */
 public class ParticipantCommunicationInboundPort extends AbstractOutboundPort implements CommunicationCI {
 
+    /**
+     * Description : Instantiates a new Participant communication inbound port.
+     * @param uri of type String - the uri of the concerned port
+     * @param owner of type ComponentI - the owner of that port
+     * @throws Exception the exception
+     */
     public ParticipantCommunicationInboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, CommunicationCI.class, owner);
     }
@@ -22,17 +31,6 @@ public class ParticipantCommunicationInboundPort extends AbstractOutboundPort im
                 e.printStackTrace();
                 }
         });
-        // this.getOwner().handleRequest(
-
-        //         p -> {
-        //             try {
-        //                 ((Participant) p).connect(address, communicationInboundPortURI, routingInboundPortURI);
-
-        //             } catch (Exception e) {
-        //                 throw new RuntimeException(e);
-        //             }
-        //             return null;
-        //         });
     }
 
     @Override

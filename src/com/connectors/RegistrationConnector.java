@@ -8,6 +8,9 @@ import fr.sorbonne_u.components.connectors.AbstractConnector;
 
 import java.util.Set;
 
+/**
+ * The type Registration connector.
+ */
 public class RegistrationConnector extends AbstractConnector implements RegistrationCI {
     @Override
     public Set<ConnectionInfo> registerInternal(P2PAddressI address, String communicationInboundPortURI, PositionI initialPositionI, double initialRange, String routingInboundPortURI) throws Exception {
