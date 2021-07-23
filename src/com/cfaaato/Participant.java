@@ -230,27 +230,21 @@ public class Participant extends AbstractComponent {
         HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
         boolean isPresent = false;
         for (Map.Entry<P2PAddressI,Set<RouteInfo>> table: map.entrySet()) {
-            this.logMessage(" est entre dans for avec: " + neighbour);
-            this.logMessage(" est entre dans for avec: " + table.getKey());
             if (table.getKey().equals(neighbour)){
-                this.logMessage(" est entre dans if avec: " + neighbour);
                 isPresent = true;
                 Set<RouteInfo> myroutes = table.getValue();
                 Iterator<RouteInfo> myiterator = myroutes.iterator();
                 while(myiterator.hasNext()) {
                     RouteInfo myactualroute = myiterator.next();
-                    this.logMessage("ma iterator: " + myactualroute.getDestination());
                     Iterator<RouteInfo> newiterator = routes.iterator();
                     while (newiterator.hasNext()) {
                         RouteInfo newactualroute = newiterator.next();
                         if (myactualroute.getDestination().equals(newactualroute.getDestination())) {
                             if (myactualroute.getNumberOfHops() > newactualroute.getNumberOfHops()) {
-                                this.logMessage("here1");
                                 this.myRoutingTable.updateSetRoute(neighbour, newactualroute);
                             }
                         }
                         else {
-                            this.logMessage("here2");
                             this.myRoutingTable.updateNewRoute(neighbour,newactualroute);
                         }
                     }
@@ -311,7 +305,6 @@ public class Participant extends AbstractComponent {
             for (Map.Entry<P2PAddressI, Set<RouteInfo>> table : map.entrySet()) {
                 if(!boucle) {
                     address = table.getKey();
-                    routeInfo = table.getValue();
                     boucle = true;
                 }
                 if(boucle) {
@@ -350,7 +343,6 @@ public class Participant extends AbstractComponent {
         // Thread.sleep(rd.nextInt(1000));
         // super.execute();
         this.toggleLogging();
-        // this.logMessage(" Objet:"+ this.hashCode()+ " Start Execute");
         try {
             registrateOnNetwork();
             newOnNetwork();
@@ -373,8 +365,9 @@ public class Participant extends AbstractComponent {
     public void finalise() throws Exception
     {
         this.logMessage(" nb comAddressPortTable : "+this.comAddressPortTable.size() +"\n"+this.comAddressPortTable );
-        this.printExecutionLog();
+
         HashMap<P2PAddressI,Set<RouteInfo>> map = this.myRoutingTable.getTable();
+        this.logMessage("ma rt: " + map);
         for (Map.Entry<P2PAddressI,Set<RouteInfo>> table: map.entrySet()) {
             Set<RouteInfo> routeInfo = table.getValue();
             Iterator<RouteInfo> iterator = routeInfo.iterator();
@@ -383,6 +376,7 @@ public class Participant extends AbstractComponent {
                 this.logMessage(actual + " allo " + table.getKey() + " test " + actual.getDestination() + "  " + actual.getNumberOfHops());
             }
         }
+        this.printExecutionLog();
         this.doPortDisconnection(this.prop.getPortURI());
         this.prop.unpublishPort();
         super.finalise();
